@@ -60,18 +60,32 @@ jobs:
       - name: Install Conan
         run: pip install "conan==2.28.0"
 
-      - name: Build Android APK
+      - name: Decode keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > "${{ github.workspace }}/vpnyour.keystore"
+
+      - name: Build signed Android APK
+        env:
+          QT_INSTALL_DIR: ${{ runner.temp }}
+          QT_ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/vpnyour.keystore
+          QT_ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          QT_ANDROID_KEYSTORE_STORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          QT_ANDROID_KEYSTORE_KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          export QT_INSTALL_DIR="${{ runner.temp }}"
           conan profile detect --force
           chmod +x deploy/build.sh
-          deploy/build.sh -t android --abi ${{ env.ABI }}
+          deploy/build.sh -t android --sign --abi ${{ env.ABI }}
 
       - name: Collect APK
         run: |
           mkdir -p artifacts
-          find deploy/build -name '*.apk' -exec cp {} artifacts/ \;
-          ls -la artifacts || true
+          apk=$(find deploy/build -path '*android-build*' -name '*.apk' | head -1)
+          echo "found: $apk"
+          cp "$apk" "artifacts/VPNYour_${{ env.ABI }}.apk"
+          ls -la artifacts
+
+      - name: Cleanup keystore
+        if: always()
+        run: rm -f "${{ github.workspace }}/vpnyour.keystore"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
