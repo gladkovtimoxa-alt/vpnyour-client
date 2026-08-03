@@ -14,10 +14,13 @@ import ru.vpnyour.app.protocol.ProtocolState.CONNECTED
 import ru.vpnyour.app.protocol.ProtocolState.DISCONNECTED
 import ru.vpnyour.app.protocol.Statistics
 import ru.vpnyour.app.protocol.VpnStartException
-import ru.vpnyour.app.protocol.xray.libXray.DialerController
-import ru.vpnyour.app.protocol.xray.libXray.LibXray
-import ru.vpnyour.app.protocol.xray.libXray.Logger
-import ru.vpnyour.app.protocol.xray.libXray.Tun2SocksConfig
+// libXray.* is the prebuilt gomobile binding baked into libxray.aar with a
+// fixed -javapkg=org.amnezia.vpn.protocol.xray (see recipes/amnezia-libxray).
+// It is NOT our own source, so it keeps the upstream package - do not rebrand.
+import org.amnezia.vpn.protocol.xray.libXray.DialerController
+import org.amnezia.vpn.protocol.xray.libXray.LibXray
+import org.amnezia.vpn.protocol.xray.libXray.Logger
+import org.amnezia.vpn.protocol.xray.libXray.Tun2SocksConfig
 import ru.vpnyour.app.util.Log
 import ru.vpnyour.app.util.net.InetNetwork
 import ru.vpnyour.app.util.net.ip
