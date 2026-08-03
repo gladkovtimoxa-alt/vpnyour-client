@@ -257,12 +257,12 @@ PageType {
                 disabledColor: AmneziaStyle.color.mutedGray
                 textColor: AmneziaStyle.color.goldenApricot
 
-                text: qsTr("Site Amnezia")
+                text: qsTr("Сайт vpnyour")
 
                 rightImageSource: "qrc:/images/controls/external-link.svg"
 
                 clickedFunc: function() {
-                    Qt.openUrlExternally(LanguageUiController.getCurrentSiteUrl())
+                    Qt.openUrlExternally("https://vpnyour.ru/")
                 }
             }
         }
@@ -270,29 +270,19 @@ PageType {
 
     property list<QtObject> variants: [
         amneziaVpn,
-        selfHostVpn,
-        backupRestore,
-        fileOpen,
-        qrScan,
-        restorePurchases,
-        siteLink
+        qrScan
     ]
     
     QtObject {
         id: amneziaVpn
 
-        property string title: qsTr("VPN by Amnezia")
-        property string description: qsTr("The easiest way to connect to the VPN")
-        property string imageSource: "qrc:/images/controls/amnezia.svg"
+        property string title: qsTr("Плати по миру")
+        property string description: qsTr("Это просто!")
+        property string imageSource: "qrc:/images/controls/globe-2.svg"
         property bool featuredAmneziaConnection: true
         property bool isVisible: true
         property var handler: function() {
-            PageController.showBusyIndicator(true)
-            var result = SubscriptionUiController.fillAvailableServices()
-            PageController.showBusyIndicator(false)
-            if (result) {
-                PageController.goToPage(PageEnum.PageSetupWizardApiServicesList)
-            }
+            Qt.openUrlExternally("https://platipomiru.com/?code=8HKNIDZD")
         }
     }
 
