@@ -1,4 +1,4 @@
-package org.amnezia.vpn.util
+package ru.vpnyour.app.util
 
 import org.json.JSONArray
 import org.json.JSONObject

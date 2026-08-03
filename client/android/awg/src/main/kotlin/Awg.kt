@@ -1,7 +1,7 @@
-package org.amnezia.vpn.protocol.awg
+package ru.vpnyour.app.protocol.awg
 
-import org.amnezia.vpn.protocol.wireguard.Wireguard
-import org.amnezia.vpn.protocol.wireguard.WireguardConfig
+import ru.vpnyour.app.protocol.wireguard.Wireguard
+import ru.vpnyour.app.protocol.wireguard.WireguardConfig
 import org.json.JSONObject
 
 class Awg : Wireguard() {

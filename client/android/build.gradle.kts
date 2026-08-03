@@ -17,7 +17,7 @@ val qtTargetAbiList: String by gradleProperties
 val outputBaseName: String by gradleProperties
 
 android {
-    namespace = "org.amnezia.vpn"
+    namespace = "ru.vpnyour.app"
 
     buildFeatures {
         viewBinding = true

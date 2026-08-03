@@ -30,8 +30,8 @@ namespace
 constexpr auto kIosBundleId = "org.amnezia.AmneziaVPN";
 constexpr auto kIosStoreUrlFallback = "itms-apps://itunes.apple.com/app/id1600529900";
 #else
-constexpr auto kAndroidPackage = "org.amnezia.vpn";
-constexpr auto kAndroidStoreUrl = "https://play.google.com/store/apps/details?id=org.amnezia.vpn";
+constexpr auto kAndroidPackage = "ru.vpnyour.app";
+constexpr auto kAndroidStoreUrl = "https://play.google.com/store/apps/details?id=ru.vpnyour.app";
 #endif
 } // namespace
 #endif

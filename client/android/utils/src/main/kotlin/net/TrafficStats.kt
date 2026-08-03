@@ -1,4 +1,4 @@
-package org.amnezia.vpn.util.net
+package ru.vpnyour.app.util.net
 
 import android.net.TrafficStats
 import android.os.Build

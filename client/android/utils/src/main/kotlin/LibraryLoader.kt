@@ -1,4 +1,4 @@
-package org.amnezia.vpn.util
+package ru.vpnyour.app.util
 
 import android.annotation.SuppressLint
 import android.content.Context
