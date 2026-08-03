@@ -278,7 +278,7 @@ PageType {
 
         property string title: qsTr("Плати по миру")
         property string description: qsTr("Это просто!")
-        property string imageSource: "qrc:/images/controls/globe-2.svg"
+        property string imageSource: "qrc:/images/controls/platipomiru.png"
         property bool featuredAmneziaConnection: true
         property bool isVisible: true
         property var handler: function() {
