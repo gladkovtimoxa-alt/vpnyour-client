@@ -62,8 +62,8 @@ PageType {
                 Layout.fillWidth: true
                 Layout.margins: 16
 
-                text: qsTr("Use AmneziaDNS")
-                descriptionText: qsTr("If AmneziaDNS is installed on the server")
+                text: qsTr("Использовать DNS сервера")
+                descriptionText: qsTr("Если DNS-сервер установлен на сервере")
 
                 checked: SettingsController.isAmneziaDnsEnabled()
                 onToggled: function() {
@@ -81,7 +81,7 @@ PageType {
                 Layout.fillWidth: true
 
                 text: qsTr("DNS servers")
-                descriptionText: qsTr("When AmneziaDNS is not used or installed")
+                descriptionText: qsTr("Когда DNS-сервер не используется или не установлен")
                 rightImageSource: "qrc:/images/controls/chevron-right.svg"
 
                 clickedFunction: function() {

@@ -106,11 +106,11 @@ PageType {
                             clickedFunction: function() {
                                 var fileName = ""
                                 if (GC.isMobile()) {
-                                    fileName = "AmneziaVPN.log"
+                                    fileName = "VPNYour.log"
                                 } else {
                                     fileName = SystemController.getFileName(qsTr("Save"),
                                                                             qsTr("Logs files (*.log)"),
-                                                                            StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/AmneziaVPN",
+                                                                            StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/VPNYour",
                                                                             true,
                                                                             ".log")
                                 }
@@ -291,7 +291,7 @@ PageType {
 
         property bool featuredAmneziaConnection: false
         property string title: qsTr("Self-hosted VPN")
-        property string description: qsTr("Configure Amnezia VPN on your own server")
+        property string description: qsTr("Configure VPNYour on your own server")
         property string imageSource: "qrc:/images/controls/server.svg"
         property bool isVisible: true
         property var handler: function() {

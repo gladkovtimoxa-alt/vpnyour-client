@@ -85,8 +85,7 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
-                textString: qsTr("The backup will contain your passwords and private keys for all servers added " +
-                                 "to AmneziaVPN. Keep this information in a secure place.")
+                textString: qsTr("Резервная копия будет содержать ваши пароли и закрытые ключи для всех серверов, добавленных в VPNYour. Храните эту информацию в надёжном месте.")
 
                 iconPath: "qrc:/images/controls/alert-circle.svg"
             }
@@ -104,11 +103,11 @@ PageType {
                 clickedFunc: function() {
                     var fileName = ""
                     if (GC.isMobile()) {
-                        fileName = "AmneziaVPN.backup"
+                        fileName = "VPNYour.backup"
                     } else {
                         fileName = SystemController.getFileName(qsTr("Save backup file"),
                                                                 qsTr("Backup files (*.backup)"),
-                                                                StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/AmneziaVPN",
+                                                                StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/VPNYour",
                                                                 true,
                                                                 ".backup")
                     }

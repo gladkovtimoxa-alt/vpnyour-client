@@ -40,17 +40,7 @@ PageType {
         header: ColumnLayout {
             width: listView.width
 
-            Image {
-                id: image
-                source: "qrc:/images/amneziaBigLogo.png"
-
-                Layout.alignment: Qt.AlignCenter
-                Layout.topMargin: 16
-                Layout.leftMargin: 16
-                Layout.rightMargin: 16
-                Layout.preferredWidth: 291
-                Layout.preferredHeight: 224
-            }
+            // VPNYour: Amnezia logo removed (add a VPNYour logo asset here if needed)
 
             Header2TextType {
                 Layout.fillWidth: true
@@ -170,7 +160,7 @@ PageType {
                 text: qsTr("Privacy Policy")
 
                 clickedFunc: function() {
-                    Qt.openUrlExternally(LanguageUiController.getCurrentSiteUrl("policy"))
+                    Qt.openUrlExternally("https://vpnyour.ru/privacy")
                 }
             }
         }
@@ -179,7 +169,6 @@ PageType {
     property list<QtObject> contacts: [
         telegramGroup,
         mail,
-        github,
         website
     ]
 
@@ -190,18 +179,18 @@ PageType {
         readonly property string description: qsTr("To discuss features")
         readonly property string imageSource: "qrc:/images/controls/telegram.svg"
         readonly property var handler: function() {
-            Qt.openUrlExternally(qsTr("https://t.me/amnezia_vpn_en"))
+            Qt.openUrlExternally("https://t.me/vpny0ur")
         }
     }
 
     QtObject {
         id: mail
 
-        readonly property string title: qsTr("support@amnezia.org")
+        readonly property string title: qsTr("support@vpnyour.ru")
         readonly property string description: qsTr("For reviews and bug reports")
         readonly property string imageSource: "qrc:/images/controls/mail.svg"
         readonly property var handler: function() {
-            Qt.openUrlExternally(qsTr("mailto:support@amnezia.org"))
+            Qt.openUrlExternally("mailto:support@vpnyour.ru")
         }
     }
 
@@ -221,9 +210,9 @@ PageType {
 
         readonly property string title: qsTr("Website")
         readonly property string description: qsTr("Visit official website")
-        readonly property string imageSource: "qrc:/images/controls/amnezia.svg"
+        readonly property string imageSource: "qrc:/images/controls/globe-2.svg"
         readonly property var handler: function() {
-            Qt.openUrlExternally(LanguageUiController.getCurrentSiteUrl())
+            Qt.openUrlExternally("https://vpnyour.ru/")
         }
     }
 }

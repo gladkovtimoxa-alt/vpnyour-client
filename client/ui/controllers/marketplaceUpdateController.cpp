@@ -56,7 +56,7 @@ void MarketplaceUpdateController::start()
     QNetworkRequest request(url);
     request.setTransferTimeout(1000);
     request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork);
-    request.setHeader(QNetworkRequest::UserAgentHeader, QByteArrayLiteral("AmneziaVPN"));
+    request.setHeader(QNetworkRequest::UserAgentHeader, QByteArrayLiteral("VPNYour"));
 
     QNetworkReply *reply = m_nam.get(request);
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
@@ -151,7 +151,7 @@ void MarketplaceUpdateController::hideCover()
 void MarketplaceUpdateController::showUpdatePrompt(const QString &storeUrl)
 {
     const QString title = tr("Update available");
-    const QString message = tr("A new version of AmneziaVPN is available.");
+    const QString message = tr("Доступна новая версия VPNYour.");
     const QString updateTitle = tr("Update");
     const QString skipTitle = tr("Skip");
 

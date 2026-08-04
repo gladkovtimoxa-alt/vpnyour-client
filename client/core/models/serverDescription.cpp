@@ -47,10 +47,10 @@ QString getBaseDescription(const QMap<DockerContainer, ContainerConfig> &contain
     if (hasWriteAccess) {
         const bool isDnsInstalled = containers.contains(DockerContainer::Dns);
         if (isAmneziaDnsEnabled && isDnsInstalled) {
-            description += QStringLiteral("Amnezia DNS | ");
+            description += QStringLiteral("DNS | ");
         }
     } else if (primaryDnsIsAmnezia) {
-        description += QStringLiteral("Amnezia DNS | ");
+        description += QStringLiteral("DNS | ");
     }
     return description;
 }
@@ -66,7 +66,7 @@ QString getProtocolName(DockerContainer defaultContainer, const QMap<DockerConta
             if (const AwgProtocolConfig *awg = it->getAwgProtocolConfig()) {
                 protocolVersion = ProtocolUtils::getProtocolVersionString(awg->toJson());
                 if (defaultContainer == DockerContainer::Awg && !awg->serverConfig.isThirdPartyConfig) {
-                    containerName = QStringLiteral("AmneziaWG Legacy");
+                    containerName = QStringLiteral("WireGuard Legacy");
                 }
             }
         }
