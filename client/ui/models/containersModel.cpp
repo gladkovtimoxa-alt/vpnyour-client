@@ -32,13 +32,13 @@ QVariant ContainersModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case NameRole: {
         if (container == DockerContainer::Awg && !isThirdPartyConfig) {
-            return "WireGuard Legacy";
+            return "VPNYour Legacy";
         }
         return ContainerUtils::containerHumanNames().value(container);
     }
     case DescriptionRole: {
         if (container == DockerContainer::Awg && !isThirdPartyConfig) {
-            return QObject::tr("WireGuard is a fast, modern and secure VPN protocol. "
+            return QObject::tr("VPNYour is a fast, modern and secure VPN protocol. "
                            "It provides high connection speed and ensures stable operation even in the most challenging network conditions.");
         }
 

@@ -66,7 +66,7 @@ QString getProtocolName(DockerContainer defaultContainer, const QMap<DockerConta
             if (const AwgProtocolConfig *awg = it->getAwgProtocolConfig()) {
                 protocolVersion = ProtocolUtils::getProtocolVersionString(awg->toJson());
                 if (defaultContainer == DockerContainer::Awg && !awg->serverConfig.isThirdPartyConfig) {
-                    containerName = QStringLiteral("WireGuard Legacy");
+                    containerName = QStringLiteral("VPNYour Legacy");
                 }
             }
         }

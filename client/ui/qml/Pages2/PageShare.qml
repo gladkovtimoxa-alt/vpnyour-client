@@ -62,14 +62,14 @@ PageType {
             }
             case PageShare.ConfigType.WireGuard: {
                 ExportController.generateWireGuardConfig(serverId, clientNameTextField.textField.text)
-                configCaption = qsTr("Save WireGuard config")
+                configCaption = qsTr("Save VPNYour config")
                 configExtension = ".conf"
                 configFileName = "amnezia_for_wireguard"
                 break
             }
             case PageShare.ConfigType.Awg: {
                 ExportController.generateAwgConfig(serverId, containerIndex, clientNameTextField.textField.text)
-                configCaption = qsTr("Save WireGuard config")
+                configCaption = qsTr("Save VPNYour config")
                 configExtension = ".conf"
                 configFileName = "amnezia_for_awg"
                 break
@@ -115,12 +115,12 @@ PageType {
     }
     QtObject {
         id: wireGuardConnectionFormat
-        readonly property string name: qsTr("WireGuard native format")
+        readonly property string name: qsTr("VPNYour native format")
         readonly property int type: PageShare.ConfigType.WireGuard
     }
     QtObject {
         id: awgConnectionFormat
-        readonly property string name: qsTr("WireGuard native format")
+        readonly property string name: qsTr("VPNYour native format")
         readonly property int type: PageShare.ConfigType.Awg
     }
     QtObject {

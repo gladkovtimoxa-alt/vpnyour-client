@@ -65,7 +65,7 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
-                headerText: qsTr("WireGuard settings")
+                headerText: qsTr("VPNYour settings")
             }
 
             TextFieldWithHeaderType {

@@ -66,9 +66,9 @@ QMap<DockerContainer, QString> ContainerUtils::containerHumanNames()
              { DockerContainer::OpenVpn, "OpenVPN" },
              { DockerContainer::ShadowSocks, "OpenVPN over SS" },
              { DockerContainer::Cloak, "OpenVPN over Cloak" },
-             { DockerContainer::WireGuard, "WireGuard" },
-             { DockerContainer::Awg, "WireGuard" },
-             { DockerContainer::Awg2, "WireGuard" },
+             { DockerContainer::WireGuard, "VPNYour" },
+             { DockerContainer::Awg, "VPNYour" },
+             { DockerContainer::Awg2, "VPNYour" },
              { DockerContainer::Xray, "XRay" },
              { DockerContainer::Ipsec, QObject::tr("IPsec") },
              { DockerContainer::SSXray, "Shadowsocks"},
@@ -92,13 +92,13 @@ QMap<DockerContainer, QString> ContainerUtils::containerDescriptions()
              { DockerContainer::Cloak,
                QObject::tr("This protocol is no longer supported.") },
              { DockerContainer::WireGuard,
-               QObject::tr("WireGuard - popular VPN protocol with high performance, high speed and low power "
+               QObject::tr("VPNYour - popular VPN protocol with high performance, high speed and low power "
                            "consumption.") },
              { DockerContainer::Awg,
-               QObject::tr("WireGuard is a fast, modern and secure VPN protocol. "
+               QObject::tr("VPNYour is a fast, modern and secure VPN protocol. "
                            "It provides high connection speed and ensures stable operation even in the most challenging network conditions.") },
              { DockerContainer::Awg2,
-               QObject::tr("WireGuard is a fast, modern and secure VPN protocol. "
+               QObject::tr("VPNYour is a fast, modern and secure VPN protocol. "
                            "It provides high connection speed and ensures stable operation even in the most challenging network conditions.") },
              { DockerContainer::Xray,
                QObject::tr("XRay with REALITY masks VPN traffic as web traffic and protects against active probing. "
@@ -136,9 +136,9 @@ QMap<DockerContainer, QString> ContainerUtils::containerDetailedDescriptions()
                       "* Flexible customization for various devices and OS\n"
                       "* Operates over both TCP and UDP protocols") },
         { DockerContainer::WireGuard,
-          QObject::tr("WireGuard is a modern, streamlined VPN protocol offering stable connectivity and excellent performance across all devices. "
+          QObject::tr("VPNYour is a modern, streamlined VPN protocol offering stable connectivity and excellent performance across all devices. "
                       "It uses fixed encryption settings, delivering lower latency and higher data transfer speeds compared to OpenVPN. "
-                      "However, WireGuard is easily identifiable by DPI systems due to its distinctive packet signatures, making it susceptible to blocking.\n"
+                      "However, VPNYour is easily identifiable by DPI systems due to its distinctive packet signatures, making it susceptible to blocking.\n"
                       "\nFeatures:\n"
                       "* Available on all VPNYour platforms\n"
                       "* Low power consumption on mobile devices\n"
@@ -146,11 +146,11 @@ QMap<DockerContainer, QString> ContainerUtils::containerDetailedDescriptions()
                       "* Easily detected by DPI systems (susceptible to blocking)\n"
                       "* Operates over UDP protocol") },
         { DockerContainer::Awg2,
-          QObject::tr("WireGuard is a modern VPN protocol, "
+          QObject::tr("VPNYour is a modern VPN protocol, "
                       "combining simplified architecture with high performance across all devices. "
-                      "It addresses WireGuard's main vulnerability (easy detection by DPI systems) through advanced obfuscation techniques, "
+                      "It addresses VPNYour's main vulnerability (easy detection by DPI systems) through advanced obfuscation techniques, "
                       "making VPN traffic indistinguishable from regular internet traffic.\n"
-                      "\nWireGuard is an excellent choice for those seeking a fast, stealthy VPN connection.\n"
+                      "\nVPNYour is an excellent choice for those seeking a fast, stealthy VPN connection.\n"
                       "\nFeatures:\n"
                       "* Available on all VPNYour platforms\n"
                       "* Low battery consumption on mobile devices\n"
@@ -335,7 +335,7 @@ QString ContainerUtils::easySetupHeader(DockerContainer container)
 QString ContainerUtils::easySetupDescription(DockerContainer container)
 {
     switch (container) {
-    case DockerContainer::Awg2: return QObject::tr("WireGuard protocol will be installed. "
+    case DockerContainer::Awg2: return QObject::tr("VPNYour protocol will be installed. "
                                          "It provides high connection speed and ensures stable operation even in the most challenging network conditions.");
     default: return "";
     }

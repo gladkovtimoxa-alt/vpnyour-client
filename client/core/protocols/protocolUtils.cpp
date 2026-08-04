@@ -59,8 +59,8 @@ QString ProtocolUtils::protoToString(Proto p)
 QMap<Proto, QString> ProtocolUtils::protocolHumanNames()
 {
     return { { Proto::OpenVpn, "OpenVPN" },
-             { Proto::WireGuard, "WireGuard" },
-             { Proto::Awg, "WireGuard" },
+             { Proto::WireGuard, "VPNYour" },
+             { Proto::Awg, "VPNYour" },
              { Proto::Ikev2, "IKEv2" },
              { Proto::Xray, "XRay" },
              { Proto::SSXray, "Shadowsocks"},

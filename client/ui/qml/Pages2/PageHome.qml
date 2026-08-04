@@ -38,7 +38,7 @@ PageType {
 
     function protocolDisplayName(protocol) {
         switch (protocol) {
-        case "awg": return "WireGuard"
+        case "awg": return "VPNYour"
         case "vless": return "VLESS"
         default: return protocol
         }

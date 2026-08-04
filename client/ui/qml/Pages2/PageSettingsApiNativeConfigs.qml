@@ -58,7 +58,7 @@ PageType {
                 Layout.leftMargin: 16
 
                 headerText: qsTr("Configuration Files")
-                descriptionText: qsTr("For router setup or the WireGuard app")
+                descriptionText: qsTr("For router setup or the VPNYour app")
             }
         }
 
