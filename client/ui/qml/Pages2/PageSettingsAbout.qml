@@ -40,7 +40,16 @@ PageType {
         header: ColumnLayout {
             width: listView.width
 
-            // VPNYour: Amnezia logo removed (add a VPNYour logo asset here if needed)
+            Image {
+                id: image
+                source: "qrc:/images/vpnyour_logo.png"
+                fillMode: Image.PreserveAspectFit
+
+                Layout.alignment: Qt.AlignCenter
+                Layout.topMargin: 24
+                Layout.preferredWidth: 180
+                Layout.preferredHeight: 180
+            }
 
             Header2TextType {
                 Layout.fillWidth: true
