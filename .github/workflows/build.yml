@@ -113,3 +113,59 @@ jobs:
           name: VPNYour-android-universal
           path: artifacts/*.apk
           if-no-files-found: warn
+
+  windows:
+    name: Windows installer (x64)
+    runs-on: windows-latest
+    env:
+      QT_VERSION: 6.10.3
+      QT_MODULES: 'qtremoteobjects qt5compat qtimageformats qtshadertools'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+
+      - name: Install Qt for Windows (msvc2022_64) + Installer Framework
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: windows
+          target: desktop
+          arch: win64_msvc2022_64
+          modules: ${{ env.QT_MODULES }}
+          tools: 'tools_ifw'
+          dir: ${{ runner.temp }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Conan
+        run: pip install "conan==2.28.0"
+
+      - name: Build Windows client + IFW installer
+        shell: cmd
+        env:
+          QT_INSTALL_DIR: ${{ runner.temp }}
+        run: |
+          conan profile detect --force
+          call deploy\build.bat --installer ifw
+
+      - name: Collect installer
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          exe=$(find deploy/build -maxdepth 2 -iname 'VPNYour_*windows*.exe' | head -1)
+          if [ -z "$exe" ]; then exe=$(find deploy/build -maxdepth 2 -iname '*.exe' | grep -iE 'setup|installer|windows|VPNYour|Amnezia' | head -1); fi
+          echo "found: $exe"
+          cp "$exe" artifacts/
+          ls -la artifacts
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: VPNYour-windows-installer
+          path: artifacts/*.exe
+          if-no-files-found: warn
