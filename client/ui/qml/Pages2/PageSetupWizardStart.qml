@@ -23,7 +23,8 @@ PageType {
 
         Image {
             id: image
-            source: "qrc:/images/amneziaBigLogo.png"
+            source: "qrc:/images/vpnyour_logo.png"
+            fillMode: Image.PreserveAspectFit
 
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Layout.topMargin: 32 + PageController.safeAreaTopMargin

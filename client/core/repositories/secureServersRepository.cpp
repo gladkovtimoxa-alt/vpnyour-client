@@ -205,12 +205,13 @@ QString SecureServersRepository::nextAvailableServerName() const
         }
     }
 
-    int i = 0;
-    QString candidate;
-    do {
+    const QString base = tr("Server");
+    QString candidate = base;
+    int i = 1;
+    while (usedNames.contains(candidate)) {
         ++i;
-        candidate = tr("Server") + QLatin1Char(' ') + QString::number(i);
-    } while (usedNames.contains(candidate));
+        candidate = base + QLatin1Char(' ') + QString::number(i);
+    }
 
     return candidate;
 }

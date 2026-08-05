@@ -50,35 +50,35 @@ PageType {
                 ExportController.generateConnectionConfig(serverId, containerIndex, clientNameTextField.textField.text);
                 configCaption = qsTr("Save VPNYour config")
                 configExtension = ".vpn"
-                configFileName = "amnezia_config"
+                configFileName = "vpnyour_config"
                 break;
             }
             case PageShare.ConfigType.OpenVpn: {
                 ExportController.generateOpenVpnConfig(serverId, clientNameTextField.textField.text)
                 configCaption = qsTr("Save OpenVPN config")
                 configExtension = ".ovpn"
-                configFileName = "amnezia_for_openvpn"
+                configFileName = "vpnyour_for_openvpn"
                 break
             }
             case PageShare.ConfigType.WireGuard: {
                 ExportController.generateWireGuardConfig(serverId, clientNameTextField.textField.text)
                 configCaption = qsTr("Save VPNYour config")
                 configExtension = ".conf"
-                configFileName = "amnezia_for_wireguard"
+                configFileName = "vpnyour_for_wireguard"
                 break
             }
             case PageShare.ConfigType.Awg: {
                 ExportController.generateAwgConfig(serverId, containerIndex, clientNameTextField.textField.text)
                 configCaption = qsTr("Save VPNYour config")
                 configExtension = ".conf"
-                configFileName = "amnezia_for_awg"
+                configFileName = "vpnyour_for_awg"
                 break
             }
             case PageShare.ConfigType.Xray: {
                 ExportController.generateXrayConfig(serverId, clientNameTextField.textField.text)
                 configCaption = qsTr("Save XRay config")
                 configExtension = ".json"
-                configFileName = "amnezia_for_xray"
+                configFileName = "vpnyour_for_xray"
                 break
             }
             }

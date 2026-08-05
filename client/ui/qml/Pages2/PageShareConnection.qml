@@ -28,7 +28,7 @@ PageType {
 
     property string configExtension: ".vpn"
     property string configCaption: qsTr("Save VPNYour config")
-    property string configFileName: "amnezia_config"
+    property string configFileName: "vpnyour_config"
 
     // onVisibleChanged: {
     //     configExtension = ".vpn"
