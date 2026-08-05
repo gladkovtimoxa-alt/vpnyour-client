@@ -320,12 +320,22 @@ void SecureAppSettingsRepository::setStrictKillSwitchEnabled(bool enabled)
 
 bool SecureAppSettingsRepository::isAutoConnect() const
 {
-    return value("Conf/autoConnect", false).toBool();
+    return value("Conf/autoConnect", true).toBool();
 }
 
 void SecureAppSettingsRepository::setAutoConnect(bool enabled)
 {
     setValue("Conf/autoConnect", enabled);
+}
+
+bool SecureAppSettingsRepository::isAutostartInitialized() const
+{
+    return value("Conf/autostartInitialized", false).toBool();
+}
+
+void SecureAppSettingsRepository::setAutostartInitialized(bool enabled)
+{
+    setValue("Conf/autostartInitialized", enabled);
 }
 
 bool SecureAppSettingsRepository::isStartMinimized() const

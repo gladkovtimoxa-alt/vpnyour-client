@@ -69,6 +69,8 @@ public:
     
     bool isAutoConnect() const;
     void setAutoConnect(bool enabled);
+    bool isAutostartInitialized() const;
+    void setAutostartInitialized(bool enabled);
     bool isStartMinimized() const;
     void setStartMinimized(bool enabled);
     bool isScreenshotsEnabled() const;

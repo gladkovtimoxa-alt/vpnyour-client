@@ -32,6 +32,12 @@ CoreController::CoreController(const QSharedPointer<VpnConnection> &vpnConnectio
     initControllers();
     initSignalHandlers();
 
+#if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
+    if (m_settingsController) {
+        m_settingsController->applyDesktopAutostartDefaults();
+    }
+#endif
+
     if (!skipPlatformControllerInit) {
         initAndroidController();
         initAppleController();

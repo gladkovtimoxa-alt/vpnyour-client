@@ -50,6 +50,8 @@ public:
     bool isAutoStartEnabled() const;
     void toggleAutoStart(bool enable);
 
+    void applyDesktopAutostartDefaults();
+
     bool isStartMinimizedEnabled() const;
     void toggleStartMinimized(bool enable);
 

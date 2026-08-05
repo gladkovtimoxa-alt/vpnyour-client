@@ -215,6 +215,19 @@ void SettingsController::toggleAutoStart(bool enable)
     }
 }
 
+void SettingsController::applyDesktopAutostartDefaults()
+{
+#if defined(Q_OS_WINDOWS) || defined(Q_OS_LINUX) || defined(Q_OS_MACX)
+    if (m_appSettingsRepository->isAutostartInitialized()) {
+        return;
+    }
+    toggleAutoStart(true);
+    toggleStartMinimized(true);
+    m_appSettingsRepository->setAutoConnect(true);
+    m_appSettingsRepository->setAutostartInitialized(true);
+#endif
+}
+
 bool SettingsController::isStartMinimizedEnabled() const
 {
 #if !defined(Q_OS_ANDROID) && !defined(Q_OS_IOS)
