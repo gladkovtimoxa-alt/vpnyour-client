@@ -2,12 +2,20 @@ name: VPNYour build
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'What to build'
+        type: choice
+        options: [android, windows, both]
+        default: both
   push:
     branches: [ main ]
 
 jobs:
   android:
     name: Android APK (arm64-v8a)
+    # Push builds Android only. On manual run, build it when target is android/both.
+    if: ${{ github.event_name == 'push' || github.event.inputs.target == 'android' || github.event.inputs.target == 'both' }}
     runs-on: ubuntu-latest
     env:
       ANDROID_PLATFORM: android-28
@@ -116,6 +124,8 @@ jobs:
 
   windows:
     name: Windows installer (x64)
+    # Windows never builds on push — only via manual run (target windows/both).
+    if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.target == 'windows' || github.event.inputs.target == 'both') }}
     runs-on: windows-latest
     env:
       QT_VERSION: 6.10.3
