@@ -8,7 +8,7 @@ elseif(LINUX AND NOT ANDROID)
     set(CPACK_PACKAGE_FILE_NAME "VPNYour_${AMNEZIAVPN_VERSION}_linux_x64")
 endif()
 set(CPACK_PACKAGE_INSTALL_DIRECTORY VPNYour)
-set(CPACK_PACKAGE_EXECUTABLES       AmneziaVPN VPNYour)
+set(CPACK_PACKAGE_EXECUTABLES       VPNYour VPNYour)
 set(CPACK_PRE_BUILD_SCRIPTS         ${CMAKE_CURRENT_LIST_DIR}/sign_binaries.cmake)
 set(CPACK_POST_BUILD_SCRIPTS        ${CMAKE_CURRENT_LIST_DIR}/sign_packages.cmake)
 set(CPACK_PROJECT_CONFIG_FILE       ${CMAKE_CURRENT_LIST_DIR}/CPackOptions.cmake)
@@ -23,11 +23,11 @@ else()
 endif()
 
 # === CPack IFW generator settings ===
-# NOTE: keep IFW package Name = AmneziaVPN — appName()/appExecutableFileName()/serviceName()
-# in the installer scripts derive from value("Name") and must match the real exe
-# (AmneziaVPN.exe) and Windows service (AmneziaVPN-service). Only the visible Title,
-# install dir, vendor, shortcut label and file name are rebranded to VPNYour.
-set(CPACK_IFW_PACKAGE_NAME                          AmneziaVPN)
+# On Windows the client/service output exe are renamed to VPNYour(.exe) /
+# VPNYour-service(.exe) via OUTPUT_NAME (WIN32 only), so the installer's
+# Name-derived references (appExecutableFileName = VPNYour.exe,
+# serviceName = VPNYour-service) match the real binaries. Full VPNYour branding.
+set(CPACK_IFW_PACKAGE_NAME                          VPNYour)
 set(CPACK_IFW_PACKAGE_TITLE                         VPNYour)
 set(CPACK_IFW_PACKAGE_WIZARD_DEFAULT_WIDTH          600)
 set(CPACK_IFW_PACKAGE_WIZARD_DEFAULT_HEIGHT         380)
