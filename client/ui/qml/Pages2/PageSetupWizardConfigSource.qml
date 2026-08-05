@@ -3,6 +3,8 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 
+import Qt5Compat.GraphicalEffects
+
 import QtCore
 
 import PageEnum 1.0
@@ -213,19 +215,85 @@ PageType {
         delegate: ColumnLayout {
             width: listView.width
 
+            // Рекомендуемая карточка — широкий баннер во всю ширину («Плати по миру»)
+            Item {
+                id: bannerCard
+
+                visible: featuredAmneziaConnection && isVisible
+                enabled: !root.isRestoringBackup
+
+                Layout.fillWidth: true
+                Layout.rightMargin: 16
+                Layout.leftMargin: 16
+                Layout.topMargin: 8
+                Layout.bottomMargin: 16
+
+                implicitHeight: visible ? bannerImage.height : 0
+
+                Image {
+                    id: bannerImage
+
+                    width: bannerCard.width
+                    height: Math.round(width * 530 / 1080)
+
+                    source: featuredAmneziaConnection ? imageSource : ""
+                    fillMode: Image.PreserveAspectCrop
+                    smooth: true
+                    mipmap: true
+
+                    layer.enabled: true
+                    layer.smooth: true
+                    layer.effect: OpacityMask {
+                        maskSource: Rectangle {
+                            width: bannerImage.width
+                            height: bannerImage.height
+                            radius: 16
+                        }
+                    }
+                }
+
+                Rectangle {
+                    id: bannerBadge
+
+                    z: 2
+
+                    anchors.left: bannerImage.left
+                    anchors.top: bannerImage.top
+                    anchors.leftMargin: 16
+                    anchors.topMargin: 16
+
+                    radius: 10
+                    color: AmneziaStyle.color.softViolet
+                    implicitHeight: bannerBadgeLabel.implicitHeight + 8
+                    implicitWidth: bannerBadgeLabel.implicitWidth + 16
+                    width: implicitWidth
+                    height: implicitHeight
+
+                    BadgeTextType {
+                        id: bannerBadgeLabel
+                        anchors.centerIn: parent
+                        text: qsTr("Recommended")
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: bannerImage
+                    enabled: bannerCard.enabled
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: handler()
+                }
+            }
+
             CardWithIconsType {
                 Layout.fillWidth: true
                 Layout.rightMargin: 16
                 Layout.leftMargin: 16
                 Layout.bottomMargin: 16
 
-                visible: isVisible
+                visible: !featuredAmneziaConnection && isVisible
 
                 headerText: title
                 bodyText: description
-
-                showRecommendedBadge: featuredAmneziaConnection
-                recommendedText: featuredAmneziaConnection ? qsTr("Recommended") : ""
 
                 rightImageSource: "qrc:/images/controls/chevron-right.svg"
                 leftImageSource: imageSource
@@ -278,7 +346,7 @@ PageType {
 
         property string title: qsTr("Плати по миру")
         property string description: qsTr("Это просто!")
-        property string imageSource: "qrc:/images/controls/platipomiru.png"
+        property string imageSource: "qrc:/images/controls/platipomiru-banner.png"
         property bool featuredAmneziaConnection: true
         property bool isVisible: true
         property var handler: function() {
