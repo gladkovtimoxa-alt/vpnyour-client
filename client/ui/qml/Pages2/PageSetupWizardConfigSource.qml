@@ -160,7 +160,7 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.bottomMargin: 24
 
-                text: qsTr("Insert the key, add a configuration file or scan the QR-code")
+                text: qsTr("Вставьте ключ или добавьте файл конфигурации")
             }
 
             TextFieldWithHeaderType {
@@ -338,6 +338,7 @@ PageType {
 
     property list<QtObject> variants: [
         amneziaVpn,
+        fileOpen,
         qrScan
     ]
     
