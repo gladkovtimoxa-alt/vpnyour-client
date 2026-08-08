@@ -3,7 +3,11 @@ package ru.vpnyour.app.protocol.xray
 import ru.vpnyour.app.protocol.ProtocolConfig
 import ru.vpnyour.app.util.net.InetNetwork
 
-private const val XRAY_DEFAULT_MTU = 1500
+// 1280 (IPv6 minimum) keeps every TCP segment small enough to survive paths with a
+// reduced MTU (carrier tunneling / PPPoE) where PMTU discovery is filtered. At 1500 the
+// large packets - TLS ServerHello, video, page bodies - silently blackhole through the
+// tunnel while small packets (SYN/DNS) pass, so sites "connect" but never load.
+private const val XRAY_DEFAULT_MTU = 1280
 private const val XRAY_DEFAULT_MAX_MEMORY: Long = 50 shl 20 // 50 MB
 
 class XrayConfig protected constructor(
