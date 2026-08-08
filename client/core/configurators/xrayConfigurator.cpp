@@ -100,6 +100,85 @@ namespace {
         obj[QString::fromUtf8(key)] = r;
     }
 
+    // Injects fakedns/dns/sniffing into an xray client config so DNS name lookups
+    // resolve locally instead of being relayed as raw UDP over tun2socks (whose UDP
+    // return path drops the responses -> ERR_NAME_NOT_RESOLVED / DNS_PROBE_FINISHED).
+    // Idempotent: does nothing if the config already carries a "fakedns" section.
+    // Runs for every xray connection (imported link, subscription, self-hosted) on
+    // every platform via processConfigWithLocalSettings, so it is the single place
+    // that guarantees working DNS for both Android and desktop.
+    void injectXrayDnsHandling(QJsonObject &root)
+    {
+        if (root.contains(QStringLiteral("fakedns"))) {
+            return;
+        }
+
+        QJsonObject pool;
+        pool[QStringLiteral("ipPool")] = QStringLiteral("198.18.0.0/15");
+        pool[QStringLiteral("poolSize")] = 65535;
+        root[QStringLiteral("fakedns")] = QJsonArray { pool };
+
+        QJsonObject dns;
+        dns[QStringLiteral("queryStrategy")] = QStringLiteral("UseIPv4");
+        dns[QStringLiteral("servers")] =
+                QJsonArray { QStringLiteral("fakedns"), QStringLiteral("1.1.1.1"), QStringLiteral("8.8.8.8") };
+        root[QStringLiteral("dns")] = dns;
+
+        // Enable DNS/TLS sniffing on socks inbound(s) so the fake IP is mapped back to
+        // the real domain on connect, and make sure UDP is allowed.
+        QJsonArray inbounds = root[QStringLiteral("inbounds")].toArray();
+        for (int i = 0; i < inbounds.size(); ++i) {
+            QJsonObject ib = inbounds[i].toObject();
+            if (ib[QStringLiteral("protocol")].toString().compare(QLatin1String("socks"), Qt::CaseInsensitive) == 0) {
+                QJsonObject sniffing;
+                sniffing[QStringLiteral("enabled")] = true;
+                sniffing[QStringLiteral("destOverride")] = QJsonArray { QStringLiteral("fakedns"), QStringLiteral("tls"),
+                                                                        QStringLiteral("http"), QStringLiteral("quic") };
+                sniffing[QStringLiteral("metadataOnly")] = false;
+                sniffing[QStringLiteral("routeOnly")] = false;
+                ib[QStringLiteral("sniffing")] = sniffing;
+
+                QJsonObject settings = ib[QStringLiteral("settings")].toObject();
+                settings[QStringLiteral("udp")] = true;
+                ib[QStringLiteral("settings")] = settings;
+            }
+            inbounds[i] = ib;
+        }
+        root[QStringLiteral("inbounds")] = inbounds;
+
+        // Tag the proxy outbound and add a dns outbound answered by the built-in DNS.
+        QJsonArray outbounds = root[QStringLiteral("outbounds")].toArray();
+        bool hasDnsOut = false;
+        for (int i = 0; i < outbounds.size(); ++i) {
+            QJsonObject ob = outbounds[i].toObject();
+            if (ob[QStringLiteral("protocol")].toString() == QLatin1String("dns")) {
+                hasDnsOut = true;
+            }
+            if (i == 0 && !ob.contains(QStringLiteral("tag"))) {
+                ob[QStringLiteral("tag")] = QStringLiteral("proxy");
+            }
+            outbounds[i] = ob;
+        }
+        if (!hasDnsOut) {
+            QJsonObject dnsOut;
+            dnsOut[QStringLiteral("protocol")] = QStringLiteral("dns");
+            dnsOut[QStringLiteral("tag")] = QStringLiteral("dns-out");
+            outbounds.append(dnsOut);
+        }
+        root[QStringLiteral("outbounds")] = outbounds;
+
+        // Route all port-53 traffic to the dns outbound (prepended so it wins).
+        QJsonObject routing = root[QStringLiteral("routing")].toObject();
+        QJsonArray rules = routing[QStringLiteral("rules")].toArray();
+        QJsonObject dnsRule;
+        dnsRule[QStringLiteral("type")] = QStringLiteral("field");
+        dnsRule[QStringLiteral("port")] = 53;
+        dnsRule[QStringLiteral("outboundTag")] = QStringLiteral("dns-out");
+        rules.prepend(dnsRule);
+        routing[QStringLiteral("rules")] = rules;
+        root[QStringLiteral("routing")] = routing;
+    }
+
     // Desktop applies this in XrayProtocol::start(); iOS/Android pass JSON straight to libxray — same fixes here.
     void sanitizeXrayNativeConfig(amnezia::ProtocolConfig &pc)
     {
@@ -119,6 +198,19 @@ namespace {
             c.replace(legacyListen, listenOk);
             changed = true;
         }
+
+        // Inject DNS handling (fakedns) if missing so name lookups actually resolve.
+        QJsonParseError parseError;
+        QJsonDocument doc = QJsonDocument::fromJson(c.toUtf8(), &parseError);
+        if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
+            QJsonObject root = doc.object();
+            if (!root.contains(QStringLiteral("fakedns"))) {
+                injectXrayDnsHandling(root);
+                c = QString::fromUtf8(QJsonDocument(root).toJson(QJsonDocument::Compact));
+                changed = true;
+            }
+        }
+
         if (changed) {
             pc.setNativeConfig(c);
         }
@@ -434,54 +526,13 @@ XrayProtocolConfig XrayConfigurator::buildClientProtocolConfig(const ServerCrede
     inboundObj[amnezia::protocols::xray::port] = amnezia::protocols::xray::defaultLocalProxyPort;
     inboundObj[QStringLiteral("protocol")] = QStringLiteral("socks");
     inboundObj[amnezia::protocols::xray::settings] = QJsonObject { { QStringLiteral("udp"), true } };
-    // Sniff DNS/TLS on the local socks inbound. Without this, UDP DNS queries from
-    // tun2socks are relayed raw over the tunnel and their responses are lost, so the
-    // device fails every name lookup (ERR_NAME_NOT_RESOLVED) even though routing works.
-    // destOverride includes "fakedns" so the built-in DNS answers queries locally and
-    // instantly (no UDP round-trip through the tunnel), then the connection to the
-    // synthetic IP is mapped back to the real domain and proxied.
-    inboundObj[QStringLiteral("sniffing")] = QJsonObject {
-        { QStringLiteral("enabled"), true },
-        { QStringLiteral("destOverride"),
-          QJsonArray { QStringLiteral("fakedns"), QStringLiteral("tls"), QStringLiteral("http"),
-                       QStringLiteral("quic") } },
-        { QStringLiteral("metadataOnly"), false },
-        { QStringLiteral("routeOnly"), false }
-    };
-
-    // Tag the proxy outbound and add a dns outbound so xray's built-in DNS module can
-    // answer the client's port-53 queries itself instead of tunnelling raw UDP.
-    outbound[QStringLiteral("tag")] = QStringLiteral("proxy");
-    QJsonObject dnsOutbound;
-    dnsOutbound[QStringLiteral("protocol")] = QStringLiteral("dns");
-    dnsOutbound[QStringLiteral("tag")] = QStringLiteral("dns-out");
 
     QJsonObject clientJson;
     clientJson[QStringLiteral("log")] = QJsonObject { { QStringLiteral("loglevel"), QStringLiteral("error") } };
-    // FakeDNS pool: the local xray replies to name lookups with synthetic 198.18.x.x
-    // addresses immediately, avoiding the unreliable UDP-DNS return path over tun2socks.
-    clientJson[QStringLiteral("fakedns")] = QJsonArray {
-        QJsonObject { { QStringLiteral("ipPool"), QStringLiteral("198.18.0.0/15") },
-                      { QStringLiteral("poolSize"), 65535 } }
-    };
-    // UseIPv4 avoids AAAA lookups stalling on an IPv4-only exit.
-    clientJson[QStringLiteral("dns")] = QJsonObject {
-        { QStringLiteral("queryStrategy"), QStringLiteral("UseIPv4") },
-        { QStringLiteral("servers"),
-          QJsonArray { QStringLiteral("fakedns"), QStringLiteral("1.1.1.1"), QStringLiteral("8.8.8.8") } }
-    };
     clientJson[amnezia::protocols::xray::inbounds] = QJsonArray { inboundObj };
-    clientJson[amnezia::protocols::xray::outbounds] = QJsonArray { outbound, dnsOutbound };
-    // Route all DNS traffic to the dns outbound so it is answered by the built-in DNS.
-    clientJson[QStringLiteral("routing")] = QJsonObject {
-        { QStringLiteral("rules"), QJsonArray {
-            QJsonObject {
-                { QStringLiteral("type"), QStringLiteral("field") },
-                { QStringLiteral("port"), 53 },
-                { QStringLiteral("outboundTag"), QStringLiteral("dns-out") }
-            }
-        } }
-    };
+    clientJson[amnezia::protocols::xray::outbounds] = QJsonArray { outbound };
+    // DNS handling (fakedns/sniffing) is injected centrally in sanitizeXrayNativeConfig
+    // at connect time, so it applies to every xray config source and both platforms.
 
     const QString config = QString::fromUtf8(QJsonDocument(clientJson).toJson(QJsonDocument::Compact));
 
