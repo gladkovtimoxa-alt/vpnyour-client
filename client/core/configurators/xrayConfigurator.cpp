@@ -174,6 +174,34 @@ namespace {
             sockopt[QStringLiteral("tcpMaxSeg")] = 1340;
             stream[QStringLiteral("sockopt")] = sockopt;
             first[QStringLiteral("streamSettings")] = stream;
+
+            // Drop the xtls-rprx-vision flow and turn on MUX. Browsers/YouTube open
+            // 100+ parallel connections; with per-connection REALITY each is a fresh
+            // handshake and the userspace tunnel drowns (data stalls even though CPU is
+            // idle). MUX multiplexes them all over a few carrier connections, so heavy
+            // apps behave like the messenger that already works. Vision is incompatible
+            // with MUX, so it is stripped here (the server client is set flow="").
+            QJsonObject settings = first[QStringLiteral("settings")].toObject();
+            QJsonArray vnext = settings[QStringLiteral("vnext")].toArray();
+            for (int v = 0; v < vnext.size(); ++v) {
+                QJsonObject node = vnext[v].toObject();
+                QJsonArray users = node[QStringLiteral("users")].toArray();
+                for (int u = 0; u < users.size(); ++u) {
+                    QJsonObject usr = users[u].toObject();
+                    usr.remove(QStringLiteral("flow"));
+                    users[u] = usr;
+                }
+                node[QStringLiteral("users")] = users;
+                vnext[v] = node;
+            }
+            settings[QStringLiteral("vnext")] = vnext;
+            first[QStringLiteral("settings")] = settings;
+
+            QJsonObject mux;
+            mux[QStringLiteral("enabled")] = true;
+            mux[QStringLiteral("concurrency")] = 8;
+            first[QStringLiteral("mux")] = mux;
+
             outbounds[0] = first;
         }
         QJsonObject dnsOut;
