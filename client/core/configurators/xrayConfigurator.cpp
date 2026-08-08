@@ -434,11 +434,54 @@ XrayProtocolConfig XrayConfigurator::buildClientProtocolConfig(const ServerCrede
     inboundObj[amnezia::protocols::xray::port] = amnezia::protocols::xray::defaultLocalProxyPort;
     inboundObj[QStringLiteral("protocol")] = QStringLiteral("socks");
     inboundObj[amnezia::protocols::xray::settings] = QJsonObject { { QStringLiteral("udp"), true } };
+    // Sniff DNS/TLS on the local socks inbound. Without this, UDP DNS queries from
+    // tun2socks are relayed raw over the tunnel and their responses are lost, so the
+    // device fails every name lookup (ERR_NAME_NOT_RESOLVED) even though routing works.
+    // destOverride includes "fakedns" so the built-in DNS answers queries locally and
+    // instantly (no UDP round-trip through the tunnel), then the connection to the
+    // synthetic IP is mapped back to the real domain and proxied.
+    inboundObj[QStringLiteral("sniffing")] = QJsonObject {
+        { QStringLiteral("enabled"), true },
+        { QStringLiteral("destOverride"),
+          QJsonArray { QStringLiteral("fakedns"), QStringLiteral("tls"), QStringLiteral("http"),
+                       QStringLiteral("quic") } },
+        { QStringLiteral("metadataOnly"), false },
+        { QStringLiteral("routeOnly"), false }
+    };
+
+    // Tag the proxy outbound and add a dns outbound so xray's built-in DNS module can
+    // answer the client's port-53 queries itself instead of tunnelling raw UDP.
+    outbound[QStringLiteral("tag")] = QStringLiteral("proxy");
+    QJsonObject dnsOutbound;
+    dnsOutbound[QStringLiteral("protocol")] = QStringLiteral("dns");
+    dnsOutbound[QStringLiteral("tag")] = QStringLiteral("dns-out");
 
     QJsonObject clientJson;
     clientJson[QStringLiteral("log")] = QJsonObject { { QStringLiteral("loglevel"), QStringLiteral("error") } };
+    // FakeDNS pool: the local xray replies to name lookups with synthetic 198.18.x.x
+    // addresses immediately, avoiding the unreliable UDP-DNS return path over tun2socks.
+    clientJson[QStringLiteral("fakedns")] = QJsonArray {
+        QJsonObject { { QStringLiteral("ipPool"), QStringLiteral("198.18.0.0/15") },
+                      { QStringLiteral("poolSize"), 65535 } }
+    };
+    // UseIPv4 avoids AAAA lookups stalling on an IPv4-only exit.
+    clientJson[QStringLiteral("dns")] = QJsonObject {
+        { QStringLiteral("queryStrategy"), QStringLiteral("UseIPv4") },
+        { QStringLiteral("servers"),
+          QJsonArray { QStringLiteral("fakedns"), QStringLiteral("1.1.1.1"), QStringLiteral("8.8.8.8") } }
+    };
     clientJson[amnezia::protocols::xray::inbounds] = QJsonArray { inboundObj };
-    clientJson[amnezia::protocols::xray::outbounds] = QJsonArray { outbound };
+    clientJson[amnezia::protocols::xray::outbounds] = QJsonArray { outbound, dnsOutbound };
+    // Route all DNS traffic to the dns outbound so it is answered by the built-in DNS.
+    clientJson[QStringLiteral("routing")] = QJsonObject {
+        { QStringLiteral("rules"), QJsonArray {
+            QJsonObject {
+                { QStringLiteral("type"), QStringLiteral("field") },
+                { QStringLiteral("port"), 53 },
+                { QStringLiteral("outboundTag"), QStringLiteral("dns-out") }
+            }
+        } }
+    };
 
     const QString config = QString::fromUtf8(QJsonDocument(clientJson).toJson(QJsonDocument::Compact));
 
