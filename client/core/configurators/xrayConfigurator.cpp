@@ -180,20 +180,11 @@ namespace {
         dnsOut[QStringLiteral("protocol")] = QStringLiteral("dns");
         dnsOut[QStringLiteral("tag")] = QStringLiteral("dns-out");
         outbounds.append(dnsOut);
-
-        // Blackhole for QUIC. tun2socks' UDP path is unreliable, so QUIC (HTTP/3 over
-        // UDP:443) stalls - most visibly YouTube video never starts and Chrome times
-        // out. Dropping UDP:443 forces browsers/apps to fall back to TCP, which is
-        // solid, so video and pages load normally.
-        QJsonObject blockOut;
-        blockOut[QStringLiteral("protocol")] = QStringLiteral("blackhole");
-        blockOut[QStringLiteral("tag")] = QStringLiteral("block");
-        outbounds.append(blockOut);
         root[QStringLiteral("outbounds")] = outbounds;
 
-        // Routing (each prepended so the last prepended wins first):
-        //   - port 53 -> dns-out (FakeDNS answers name lookups)
-        //   - UDP :443 -> block  (kill QUIC so everything uses TCP)
+        // Route port-53 to the built-in FakeDNS. QUIC (UDP:443) is intentionally NOT
+        // blocked: a blackhole makes Chromium browsers hang waiting on the dropped QUIC
+        // instead of falling back, so it is left to flow (or fail fast) on its own.
         QJsonObject routing = root[QStringLiteral("routing")].toObject();
         QJsonArray rules = routing[QStringLiteral("rules")].toArray();
 
@@ -202,13 +193,6 @@ namespace {
         dnsPortRule[QStringLiteral("port")] = 53;
         dnsPortRule[QStringLiteral("outboundTag")] = QStringLiteral("dns-out");
         rules.prepend(dnsPortRule);
-
-        QJsonObject quicBlockRule;
-        quicBlockRule[QStringLiteral("type")] = QStringLiteral("field");
-        quicBlockRule[QStringLiteral("network")] = QStringLiteral("udp");
-        quicBlockRule[QStringLiteral("port")] = 443;
-        quicBlockRule[QStringLiteral("outboundTag")] = QStringLiteral("block");
-        rules.prepend(quicBlockRule);
 
         routing[QStringLiteral("rules")] = rules;
         root[QStringLiteral("routing")] = routing;
