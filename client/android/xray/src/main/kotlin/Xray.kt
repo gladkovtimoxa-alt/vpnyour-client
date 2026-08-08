@@ -31,6 +31,10 @@ import org.json.JSONObject
 private const val TAG = "Xray"
 private const val LIBXRAY_TAG = "libXray"
 
+// Upper bound for the tun MTU. 1280 (IPv6 minimum) survives every path we have seen,
+// including mobile carriers and PPPoE links whose real MTU is well under 1500.
+private const val XRAY_MAX_SAFE_MTU = 1280
+
 private fun findSocksInboundIndex(inbounds: JSONArray): Int {
     for (i in 0 until inbounds.length()) {
         val o = inbounds.optJSONObject(i) ?: continue
@@ -124,8 +128,12 @@ class Xray : Protocol() {
                 excludeRoute(InetNetwork(it, 32))
             }
 
+            // Cap the tun MTU: paths with reduced MTU (mobile carriers, PPPoE) silently
+            // blackhole full-size packets when PMTU discovery is filtered, so large
+            // packets (TLS, video) never arrive and sites "connect" but never load.
             config.optString("mtu").let {
-                if (it.isNotBlank()) setMtu(it.toInt())
+                val requested = if (it.isNotBlank()) it.toInt() else XRAY_MAX_SAFE_MTU
+                setMtu(minOf(requested, XRAY_MAX_SAFE_MTU))
             }
 
             val inbounds = xrayJsonConfig.getJSONArray("inbounds")

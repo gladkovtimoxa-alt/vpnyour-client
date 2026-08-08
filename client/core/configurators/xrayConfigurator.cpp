@@ -158,12 +158,22 @@ namespace {
         }
         root[QStringLiteral("inbounds")] = inbounds;
 
-        // Tag the proxy outbound and add a dns outbound answered by the built-in DNS.
+        // Tag the proxy outbound and clamp its TCP MSS. The link to the server often
+        // has a path MTU below 1500 (mobile carriers, PPPoE) with PMTU discovery
+        // filtered, so full-size segments blackhole in BOTH directions - most visibly
+        // large downloads and video stall while the connection still opens. Advertising
+        // a small MSS makes the server send us <=1340-byte segments (and us the same),
+        // which fit any real-world path.
         if (!outbounds.isEmpty()) {
             QJsonObject first = outbounds[0].toObject();
             if (!first.contains(QStringLiteral("tag"))) {
                 first[QStringLiteral("tag")] = QStringLiteral("proxy");
             }
+            QJsonObject stream = first[QStringLiteral("streamSettings")].toObject();
+            QJsonObject sockopt = stream[QStringLiteral("sockopt")].toObject();
+            sockopt[QStringLiteral("tcpMaxSeg")] = 1340;
+            stream[QStringLiteral("sockopt")] = sockopt;
+            first[QStringLiteral("streamSettings")] = stream;
             outbounds[0] = first;
         }
         QJsonObject dnsOut;
