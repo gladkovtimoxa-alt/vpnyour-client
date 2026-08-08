@@ -100,11 +100,12 @@ namespace {
         obj[QString::fromUtf8(key)] = r;
     }
 
-    // Injects a built-in DNS module (+ dns outbound, sniffing, routing) into an xray
-    // client config so DNS name lookups are resolved by xray and handed back as real
-    // IPs, instead of being relayed as raw UDP over tun2socks (whose UDP return path
-    // drops the responses -> ERR_NAME_NOT_RESOLVED / DNS_PROBE_FINISHED / ERR_TIMED_OUT).
-    // Upstream resolution is DNS-over-TCP so it never relies on UDP returning.
+    // Injects FakeDNS (+ dns module, dns outbound, sniffing, routing) into an xray
+    // client config so DNS name lookups are answered instantly and locally, instead of
+    // being relayed as raw UDP over tun2socks (whose short UDP-NAT window drops the
+    // slow real answers -> ERR_NAME_NOT_RESOLVED / DNS_PROBE_FINISHED / ERR_TIMED_OUT).
+    // The app gets a synthetic IP immediately; the real domain is recovered by sniffing
+    // on connect and resolved on the server side.
     // Idempotent: does nothing if the config already carries a dns outbound.
     // Runs for every xray connection (imported link, subscription, self-hosted) on
     // every platform via processConfigWithLocalSettings, so it is the single place
@@ -119,28 +120,34 @@ namespace {
             }
         }
 
-        // Built-in DNS resolves names itself and hands the real IPv4 back to the app.
-        // Upstream uses DNS-over-TCP so it never depends on the unreliable UDP return
-        // path through tun2socks (TCP over the tunnel is solid). tag lets us break the
-        // resolver's own query out of the port-53 rule below (otherwise it loops).
+        // FakeDNS: the local xray answers every name lookup INSTANTLY with a synthetic
+        // 198.18.x.x address. This matters because tun2socks' UDP NAT window is short -
+        // a real resolver's answer (which needs a round-trip through the tunnel) often
+        // arrives after the window closes and is dropped, so the app never gets an IP.
+        // The instant fake answer always makes it back. Real resolution then happens on
+        // the server side after sniffing maps the fake IP back to the domain.
+        QJsonObject pool;
+        pool[QStringLiteral("ipPool")] = QStringLiteral("198.18.0.0/15");
+        pool[QStringLiteral("poolSize")] = 65535;
+        root[QStringLiteral("fakedns")] = QJsonArray { pool };
+
         QJsonObject dns;
-        dns[QStringLiteral("tag")] = QStringLiteral("dns-in");
         dns[QStringLiteral("queryStrategy")] = QStringLiteral("UseIPv4");
-        dns[QStringLiteral("servers")] =
-                QJsonArray { QStringLiteral("tcp://1.1.1.1"), QStringLiteral("tcp://8.8.8.8") };
+        dns[QStringLiteral("servers")] = QJsonArray { QStringLiteral("fakedns") };
         root[QStringLiteral("dns")] = dns;
 
-        // Sniff TLS/HTTP on the socks inbound(s) so domain-based routing works on the
-        // server side, and make sure UDP is allowed.
+        // Sniff so the synthetic IP is mapped back to the real domain on connect
+        // (fakedns), with TLS/HTTP as fallback, and make sure UDP is allowed.
         QJsonArray inbounds = root[QStringLiteral("inbounds")].toArray();
         for (int i = 0; i < inbounds.size(); ++i) {
             QJsonObject ib = inbounds[i].toObject();
             if (ib[QStringLiteral("protocol")].toString().compare(QLatin1String("socks"), Qt::CaseInsensitive) == 0) {
                 QJsonObject sniffing;
                 sniffing[QStringLiteral("enabled")] = true;
-                sniffing[QStringLiteral("destOverride")] =
-                        QJsonArray { QStringLiteral("tls"), QStringLiteral("http"), QStringLiteral("quic") };
-                sniffing[QStringLiteral("routeOnly")] = true;
+                sniffing[QStringLiteral("destOverride")] = QJsonArray { QStringLiteral("fakedns"), QStringLiteral("tls"),
+                                                                        QStringLiteral("http"), QStringLiteral("quic") };
+                sniffing[QStringLiteral("metadataOnly")] = false;
+                sniffing[QStringLiteral("routeOnly")] = false;
                 ib[QStringLiteral("sniffing")] = sniffing;
 
                 QJsonObject settings = ib[QStringLiteral("settings")].toObject();
@@ -165,9 +172,8 @@ namespace {
         outbounds.append(dnsOut);
         root[QStringLiteral("outbounds")] = outbounds;
 
-        // Routing (prepended so these win):
-        //   1) the resolver's own upstream queries go straight to the proxy (loop break)
-        //   2) everything else on port 53 is answered by the built-in DNS
+        // Route all port-53 traffic to the dns outbound so the built-in FakeDNS answers
+        // it (prepended so it wins over any existing rules).
         QJsonObject routing = root[QStringLiteral("routing")].toObject();
         QJsonArray rules = routing[QStringLiteral("rules")].toArray();
 
@@ -176,12 +182,6 @@ namespace {
         dnsPortRule[QStringLiteral("port")] = 53;
         dnsPortRule[QStringLiteral("outboundTag")] = QStringLiteral("dns-out");
         rules.prepend(dnsPortRule);
-
-        QJsonObject dnsInRule;
-        dnsInRule[QStringLiteral("type")] = QStringLiteral("field");
-        dnsInRule[QStringLiteral("inboundTag")] = QJsonArray { QStringLiteral("dns-in") };
-        dnsInRule[QStringLiteral("outboundTag")] = QStringLiteral("proxy");
-        rules.prepend(dnsInRule);
 
         routing[QStringLiteral("rules")] = rules;
         root[QStringLiteral("routing")] = routing;
