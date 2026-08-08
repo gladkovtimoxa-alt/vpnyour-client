@@ -100,42 +100,47 @@ namespace {
         obj[QString::fromUtf8(key)] = r;
     }
 
-    // Injects fakedns/dns/sniffing into an xray client config so DNS name lookups
-    // resolve locally instead of being relayed as raw UDP over tun2socks (whose UDP
-    // return path drops the responses -> ERR_NAME_NOT_RESOLVED / DNS_PROBE_FINISHED).
-    // Idempotent: does nothing if the config already carries a "fakedns" section.
+    // Injects a built-in DNS module (+ dns outbound, sniffing, routing) into an xray
+    // client config so DNS name lookups are resolved by xray and handed back as real
+    // IPs, instead of being relayed as raw UDP over tun2socks (whose UDP return path
+    // drops the responses -> ERR_NAME_NOT_RESOLVED / DNS_PROBE_FINISHED / ERR_TIMED_OUT).
+    // Upstream resolution is DNS-over-TCP so it never relies on UDP returning.
+    // Idempotent: does nothing if the config already carries a dns outbound.
     // Runs for every xray connection (imported link, subscription, self-hosted) on
     // every platform via processConfigWithLocalSettings, so it is the single place
     // that guarantees working DNS for both Android and desktop.
     void injectXrayDnsHandling(QJsonObject &root)
     {
-        if (root.contains(QStringLiteral("fakedns"))) {
-            return;
+        // Idempotent: skip if a dns outbound is already wired up.
+        QJsonArray outbounds = root[QStringLiteral("outbounds")].toArray();
+        for (const auto &v : outbounds) {
+            if (v.toObject()[QStringLiteral("protocol")].toString() == QLatin1String("dns")) {
+                return;
+            }
         }
 
-        QJsonObject pool;
-        pool[QStringLiteral("ipPool")] = QStringLiteral("198.18.0.0/15");
-        pool[QStringLiteral("poolSize")] = 65535;
-        root[QStringLiteral("fakedns")] = QJsonArray { pool };
-
+        // Built-in DNS resolves names itself and hands the real IPv4 back to the app.
+        // Upstream uses DNS-over-TCP so it never depends on the unreliable UDP return
+        // path through tun2socks (TCP over the tunnel is solid). tag lets us break the
+        // resolver's own query out of the port-53 rule below (otherwise it loops).
         QJsonObject dns;
+        dns[QStringLiteral("tag")] = QStringLiteral("dns-in");
         dns[QStringLiteral("queryStrategy")] = QStringLiteral("UseIPv4");
         dns[QStringLiteral("servers")] =
-                QJsonArray { QStringLiteral("fakedns"), QStringLiteral("1.1.1.1"), QStringLiteral("8.8.8.8") };
+                QJsonArray { QStringLiteral("tcp://1.1.1.1"), QStringLiteral("tcp://8.8.8.8") };
         root[QStringLiteral("dns")] = dns;
 
-        // Enable DNS/TLS sniffing on socks inbound(s) so the fake IP is mapped back to
-        // the real domain on connect, and make sure UDP is allowed.
+        // Sniff TLS/HTTP on the socks inbound(s) so domain-based routing works on the
+        // server side, and make sure UDP is allowed.
         QJsonArray inbounds = root[QStringLiteral("inbounds")].toArray();
         for (int i = 0; i < inbounds.size(); ++i) {
             QJsonObject ib = inbounds[i].toObject();
             if (ib[QStringLiteral("protocol")].toString().compare(QLatin1String("socks"), Qt::CaseInsensitive) == 0) {
                 QJsonObject sniffing;
                 sniffing[QStringLiteral("enabled")] = true;
-                sniffing[QStringLiteral("destOverride")] = QJsonArray { QStringLiteral("fakedns"), QStringLiteral("tls"),
-                                                                        QStringLiteral("http"), QStringLiteral("quic") };
-                sniffing[QStringLiteral("metadataOnly")] = false;
-                sniffing[QStringLiteral("routeOnly")] = false;
+                sniffing[QStringLiteral("destOverride")] =
+                        QJsonArray { QStringLiteral("tls"), QStringLiteral("http"), QStringLiteral("quic") };
+                sniffing[QStringLiteral("routeOnly")] = true;
                 ib[QStringLiteral("sniffing")] = sniffing;
 
                 QJsonObject settings = ib[QStringLiteral("settings")].toObject();
@@ -147,34 +152,37 @@ namespace {
         root[QStringLiteral("inbounds")] = inbounds;
 
         // Tag the proxy outbound and add a dns outbound answered by the built-in DNS.
-        QJsonArray outbounds = root[QStringLiteral("outbounds")].toArray();
-        bool hasDnsOut = false;
-        for (int i = 0; i < outbounds.size(); ++i) {
-            QJsonObject ob = outbounds[i].toObject();
-            if (ob[QStringLiteral("protocol")].toString() == QLatin1String("dns")) {
-                hasDnsOut = true;
+        if (!outbounds.isEmpty()) {
+            QJsonObject first = outbounds[0].toObject();
+            if (!first.contains(QStringLiteral("tag"))) {
+                first[QStringLiteral("tag")] = QStringLiteral("proxy");
             }
-            if (i == 0 && !ob.contains(QStringLiteral("tag"))) {
-                ob[QStringLiteral("tag")] = QStringLiteral("proxy");
-            }
-            outbounds[i] = ob;
+            outbounds[0] = first;
         }
-        if (!hasDnsOut) {
-            QJsonObject dnsOut;
-            dnsOut[QStringLiteral("protocol")] = QStringLiteral("dns");
-            dnsOut[QStringLiteral("tag")] = QStringLiteral("dns-out");
-            outbounds.append(dnsOut);
-        }
+        QJsonObject dnsOut;
+        dnsOut[QStringLiteral("protocol")] = QStringLiteral("dns");
+        dnsOut[QStringLiteral("tag")] = QStringLiteral("dns-out");
+        outbounds.append(dnsOut);
         root[QStringLiteral("outbounds")] = outbounds;
 
-        // Route all port-53 traffic to the dns outbound (prepended so it wins).
+        // Routing (prepended so these win):
+        //   1) the resolver's own upstream queries go straight to the proxy (loop break)
+        //   2) everything else on port 53 is answered by the built-in DNS
         QJsonObject routing = root[QStringLiteral("routing")].toObject();
         QJsonArray rules = routing[QStringLiteral("rules")].toArray();
-        QJsonObject dnsRule;
-        dnsRule[QStringLiteral("type")] = QStringLiteral("field");
-        dnsRule[QStringLiteral("port")] = 53;
-        dnsRule[QStringLiteral("outboundTag")] = QStringLiteral("dns-out");
-        rules.prepend(dnsRule);
+
+        QJsonObject dnsPortRule;
+        dnsPortRule[QStringLiteral("type")] = QStringLiteral("field");
+        dnsPortRule[QStringLiteral("port")] = 53;
+        dnsPortRule[QStringLiteral("outboundTag")] = QStringLiteral("dns-out");
+        rules.prepend(dnsPortRule);
+
+        QJsonObject dnsInRule;
+        dnsInRule[QStringLiteral("type")] = QStringLiteral("field");
+        dnsInRule[QStringLiteral("inboundTag")] = QJsonArray { QStringLiteral("dns-in") };
+        dnsInRule[QStringLiteral("outboundTag")] = QStringLiteral("proxy");
+        rules.prepend(dnsInRule);
+
         routing[QStringLiteral("rules")] = rules;
         root[QStringLiteral("routing")] = routing;
     }
@@ -199,12 +207,12 @@ namespace {
             changed = true;
         }
 
-        // Inject DNS handling (fakedns) if missing so name lookups actually resolve.
-        QJsonParseError parseError;
-        QJsonDocument doc = QJsonDocument::fromJson(c.toUtf8(), &parseError);
-        if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
-            QJsonObject root = doc.object();
-            if (!root.contains(QStringLiteral("fakedns"))) {
+        // Inject built-in DNS handling if missing so name lookups actually resolve.
+        if (!c.contains(QLatin1String("dns-out"))) {
+            QJsonParseError parseError;
+            QJsonDocument doc = QJsonDocument::fromJson(c.toUtf8(), &parseError);
+            if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
+                QJsonObject root = doc.object();
                 injectXrayDnsHandling(root);
                 c = QString::fromUtf8(QJsonDocument(root).toJson(QJsonDocument::Compact));
                 changed = true;
