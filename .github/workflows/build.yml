@@ -27,6 +27,17 @@ jobs:
         with:
           submodules: 'true'
 
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
       - name: Install desktop Qt (host tools)
         uses: jurplel/install-qt-action@v4
         with:
