@@ -117,9 +117,15 @@ jobs:
       - name: Collect AAB
         run: |
           mkdir -p artifacts
-          aab=$(find deploy/build -path '*android-build*' -name '*.aab' | head -1)
-          echo "found: $aab"
+          aab=$(find deploy/build -path '*outputs/bundle/release*' -name '*-release.aab' | head -1)
+          echo "found signed bundle: $aab"
+          if [ -z "$aab" ]; then echo "ERROR: signed .aab not found"; exit 1; fi
           cp "$aab" "artifacts/VPNYour.aab"
+          # sanity: signed bundle must contain top-level META-INF signature
+          if ! unzip -l "artifacts/VPNYour.aab" | grep -qE ' META-INF/[^/]+\.(RSA|DSA|EC)$'; then
+            echo "ERROR: collected bundle is NOT signed"; exit 1
+          fi
+          echo "signature OK"
           ls -la artifacts
 
       - name: Cleanup keystore
