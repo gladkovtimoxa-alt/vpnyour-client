@@ -15,6 +15,8 @@ jobs:
   android:
     name: Android AAB (universal)
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       ANDROID_PLATFORM: android-28
       NDK_VERSION: 27.0.11718014
@@ -124,9 +126,10 @@ jobs:
         if: always()
         run: rm -f "${{ github.workspace }}/vpnyour.keystore"
 
-      - name: Upload AAB
-        uses: actions/upload-artifact@v4
-        with:
-          name: VPNYour-android-aab
-          path: artifacts/*.aab
-          if-no-files-found: warn
+      - name: Publish AAB to Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="aab-latest"
+          gh release delete "$tag" -y --cleanup-tag 2>/dev/null || true
+          gh release create "$tag" artifacts/VPNYour.aab             -t "VPNYour AAB (latest)"             -n "Signed Android App Bundle for Google Play. Commit $GITHUB_SHA"             --target "$GITHUB_SHA"
