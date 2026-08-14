@@ -6,16 +6,14 @@ on:
       target:
         description: 'What to build'
         type: choice
-        options: [android, windows, both]
-        default: both
+        options: [android]
+        default: android
   push:
     branches: [ main ]
 
 jobs:
   android:
-    name: Android APK (arm64-v8a)
-    # Push builds Android only. On manual run, build it when target is android/both.
-    if: ${{ github.event_name == 'push' || github.event.inputs.target == 'android' || github.event.inputs.target == 'both' }}
+    name: Android AAB (universal)
     runs-on: ubuntu-latest
     env:
       ANDROID_PLATFORM: android-28
@@ -91,7 +89,7 @@ jobs:
       - name: Decode keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > "${{ github.workspace }}/vpnyour.keystore"
 
-      - name: Build signed Android APK
+      - name: Build signed Android AAB
         env:
           QT_INSTALL_DIR: ${{ runner.temp }}
           QT_ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/vpnyour.keystore
@@ -101,81 +99,23 @@ jobs:
         run: |
           conan profile detect --force
           chmod +x deploy/build.sh
-          deploy/build.sh -t android --sign --abi arm64-v8a --abi armeabi-v7a --abi x86_64
+          deploy/build.sh -t android --sign --aab --abi arm64-v8a --abi armeabi-v7a --abi x86_64
 
-      - name: Collect APK
+      - name: Collect AAB
         run: |
           mkdir -p artifacts
-          apk=$(find deploy/build -path '*android-build*' -name '*.apk' | head -1)
-          echo "found: $apk"
-          cp "$apk" "artifacts/VPNYour_universal.apk"
+          aab=$(find deploy/build -path '*android-build*' -name '*.aab' | head -1)
+          echo "found: $aab"
+          cp "$aab" "artifacts/VPNYour.aab"
           ls -la artifacts
 
       - name: Cleanup keystore
         if: always()
         run: rm -f "${{ github.workspace }}/vpnyour.keystore"
 
-      - name: Upload APK
+      - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
-          name: VPNYour-android-universal
-          path: artifacts/*.apk
-          if-no-files-found: warn
-
-  windows:
-    name: Windows installer (x64)
-    # Windows never builds on push — only via manual run (target windows/both).
-    if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.target == 'windows' || github.event.inputs.target == 'both') }}
-    runs-on: windows-latest
-    env:
-      QT_VERSION: 6.10.3
-      QT_MODULES: 'qtremoteobjects qt5compat qtimageformats qtshadertools'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: 'true'
-
-      - name: Install Qt for Windows (msvc2022_64) + Installer Framework
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.QT_VERSION }}
-          host: windows
-          target: desktop
-          arch: win64_msvc2022_64
-          modules: ${{ env.QT_MODULES }}
-          tools: 'tools_ifw'
-          dir: ${{ runner.temp }}
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install Conan
-        run: pip install "conan==2.28.0"
-
-      - name: Build Windows client + IFW installer
-        shell: cmd
-        env:
-          QT_INSTALL_DIR: ${{ runner.temp }}
-        run: |
-          conan profile detect --force
-          call deploy\build.bat --installer ifw
-
-      - name: Collect installer
-        shell: bash
-        run: |
-          mkdir -p artifacts
-          exe=$(find deploy/build -maxdepth 2 -iname 'VPNYour_*windows*.exe' | head -1)
-          if [ -z "$exe" ]; then exe=$(find deploy/build -maxdepth 2 -iname '*.exe' | grep -iE 'setup|installer|windows|VPNYour|Amnezia' | head -1); fi
-          echo "found: $exe"
-          cp "$exe" artifacts/
-          ls -la artifacts
-
-      - name: Upload installer
-        uses: actions/upload-artifact@v4
-        with:
-          name: VPNYour-windows-installer
-          path: artifacts/*.exe
+          name: VPNYour-android-aab
+          path: artifacts/*.aab
           if-no-files-found: warn
