@@ -59,6 +59,10 @@ android {
             packaging {
                 resources.excludes += "DebugProbesKt.bin"
             }
+            // include native (C++) debug symbols in the App Bundle for Play crash symbolication
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
 
