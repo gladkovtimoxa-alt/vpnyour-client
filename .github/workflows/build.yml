@@ -128,6 +128,25 @@ jobs:
           echo "signature OK"
           ls -la artifacts
 
+      - name: Build universal signed APK from AAB (bundletool)
+        env:
+          KS_PATH: ${{ github.workspace }}/vpnyour.keystore
+          KS_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          bt_ver=1.17.2
+          curl -L -o /tmp/bundletool.jar             https://github.com/google/bundletool/releases/download/${bt_ver}/bundletool-all-${bt_ver}.jar
+          java -jar /tmp/bundletool.jar build-apks             --bundle=artifacts/VPNYour.aab             --output=artifacts/VPNYour.apks             --mode=universal             --ks="$KS_PATH"             --ks-key-alias="$KS_ALIAS"             --ks-pass=pass:"$KS_PASS"             --key-pass=pass:"$KEY_PASS"
+          unzip -p artifacts/VPNYour.apks universal.apk > artifacts/VPNYour-universal.apk
+          rm -f artifacts/VPNYour.apks
+          ls -la artifacts
+          # sanity: APK must be signed
+          if ! unzip -l artifacts/VPNYour-universal.apk | grep -qE ' META-INF/[^/]+\.(RSA|DSA|EC)$'; then
+            echo "ERROR: APK is NOT signed"; exit 1
+          fi
+          echo "APK signature OK"
+
       - name: Cleanup keystore
         if: always()
         run: rm -f "${{ github.workspace }}/vpnyour.keystore"
@@ -138,4 +157,4 @@ jobs:
         run: |
           tag="aab-latest"
           gh release delete "$tag" -y --cleanup-tag 2>/dev/null || true
-          gh release create "$tag" artifacts/VPNYour.aab             -t "VPNYour AAB (latest)"             -n "Signed Android App Bundle for Google Play. Commit $GITHUB_SHA"             --target "$GITHUB_SHA"
+          gh release create "$tag" artifacts/VPNYour.aab artifacts/VPNYour-universal.apk             -t "VPNYour AAB + APK (latest)"             -n "Signed Android App Bundle (Google Play) and universal signed APK (sideload). Commit $GITHUB_SHA"             --target "$GITHUB_SHA"
