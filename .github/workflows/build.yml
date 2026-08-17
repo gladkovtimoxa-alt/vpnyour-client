@@ -89,7 +89,7 @@ jobs:
       - name: Setup Android SDK + NDK
         uses: android-actions/setup-android@v3
         with:
-          packages: "platforms;${{ env.ANDROID_PLATFORM }} ndk;${{ env.NDK_VERSION }}"
+          packages: "platforms;${{ env.ANDROID_PLATFORM }} platforms;android-36 ndk;${{ env.NDK_VERSION }}"
 
       - name: Setup Python
         uses: actions/setup-python@v5

@@ -351,7 +351,7 @@ PageType {
         property bool featuredAmneziaConnection: true
         property bool isVisible: true
         property var handler: function() {
-            Qt.openUrlExternally("https://platipomiru.com/?code=8HKNIDZD")
+            Qt.openUrlExternally("https://t.me/pgon?start=ref_jz5fogzw")
         }
     }
 
