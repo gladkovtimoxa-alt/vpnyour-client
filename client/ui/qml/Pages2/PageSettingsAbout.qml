@@ -188,7 +188,7 @@ PageType {
         readonly property string description: qsTr("To discuss features")
         readonly property string imageSource: "qrc:/images/controls/telegram.svg"
         readonly property var handler: function() {
-            Qt.openUrlExternally("https://t.me/vpny0ur")
+            Qt.openUrlExternally("https://t.me/netsecretnet")
         }
     }
 
