@@ -128,14 +128,38 @@ jobs:
           echo "signature OK"
           ls -la artifacts
 
+      - name: Build universal signed APK from AAB (bundletool)
+        env:
+          KS_PATH: ${{ github.workspace }}/vpnyour.keystore
+          KS_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          bt_ver=1.17.2
+          curl -L -o /tmp/bundletool.jar https://github.com/google/bundletool/releases/download/${bt_ver}/bundletool-all-${bt_ver}.jar
+          java -jar /tmp/bundletool.jar build-apks --bundle=artifacts/VPNYour.aab --output=artifacts/SecretNet.apks --mode=universal --ks="$KS_PATH" --ks-key-alias="$KS_ALIAS" --ks-pass=pass:"$KS_PASS" --key-pass=pass:"$KEY_PASS"
+          unzip -p artifacts/SecretNet.apks universal.apk > artifacts/SecretNet-universal.apk
+          rm -f artifacts/SecretNet.apks
+          ls -la artifacts
+          if ! unzip -l artifacts/SecretNet-universal.apk | grep -qE ' META-INF/[^/]+\.(RSA|DSA|EC)$'; then
+            echo "ERROR: APK is NOT signed"; exit 1
+          fi
+          echo "APK signature OK"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SecretNet-android-universal
+          path: artifacts/SecretNet-universal.apk
+
       - name: Cleanup keystore
         if: always()
         run: rm -f "${{ github.workspace }}/vpnyour.keystore"
 
-      - name: Publish AAB to Release
+      - name: Publish AAB + APK to Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           tag="aab-latest"
           gh release delete "$tag" -y --cleanup-tag 2>/dev/null || true
-          gh release create "$tag" artifacts/VPNYour.aab             -t "VPNYour AAB (latest)"             -n "Signed Android App Bundle for Google Play. Commit $GITHUB_SHA"             --target "$GITHUB_SHA"
+          gh release create "$tag" artifacts/VPNYour.aab artifacts/SecretNet-universal.apk             -t "Скрытая сеть — AAB + APK (latest)"             -n "Signed Android App Bundle (Google Play) and universal signed APK (sideload). Commit $GITHUB_SHA"             --target "$GITHUB_SHA"
