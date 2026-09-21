@@ -288,10 +288,10 @@ include_directories(
 
 
 add_executable(${PROJECT} ${SOURCES} ${HEADERS} ${RESOURCES})
-# Windows: ship the helper service exe as VPNYour-service.exe to match the
-# installer's serviceName()/binpath (derived from the IFW package Name=VPNYour).
+# Windows: имя службы SecretNet-service.exe ОБЯЗАНО совпадать с тем, что
+# выводит установщик: serviceName() = CPACK_IFW_PACKAGE_NAME + "-service".
 if(WIN32)
-    set_target_properties(${PROJECT} PROPERTIES OUTPUT_NAME "VPNYour-service")
+    set_target_properties(${PROJECT} PROPERTIES OUTPUT_NAME "SecretNet-service")
 endif()
 target_link_libraries(${PROJECT} PRIVATE Qt6::Core Qt6::Widgets Qt6::Network Qt6::RemoteObjects Qt6::Core5Compat Qt6::DBus Qt6::Concurrent ${LIBS})
 target_compile_definitions(${PROJECT} PRIVATE "MZ_$<UPPER_CASE:${MZ_PLATFORM_NAME}>")

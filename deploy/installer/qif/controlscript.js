@@ -21,8 +21,18 @@ function appExecutableFileName()
 function appInstalled()
 {
     if (runningOnWindows()) {
-        appInstalledUninstallerPath = installer.value("RootDir") + "Program Files/VPNYour/maintenancetool.exe";
-        appInstalledUninstallerPath_x86 = installer.value("RootDir") + "Program Files (x86)/VPNYour/maintenancetool.exe";
+        // Ищем установку под НОВЫМ именем, а если её нет — под прежним.
+        // Без второй проверки установщик перестал бы замечать уже стоящий
+        // старый клиент и поставил бы вторую копию рядом с ним, а обе они
+        // управляют одной и той же службой туннеля.
+        var rootDir = installer.value("RootDir");
+        appInstalledUninstallerPath = rootDir + "Program Files/SecretNet/maintenancetool.exe";
+        appInstalledUninstallerPath_x86 = rootDir + "Program Files (x86)/SecretNet/maintenancetool.exe";
+        if (!installer.fileExists(appInstalledUninstallerPath) &&
+            !installer.fileExists(appInstalledUninstallerPath_x86)) {
+            appInstalledUninstallerPath = rootDir + "Program Files/VPNYour/maintenancetool.exe";
+            appInstalledUninstallerPath_x86 = rootDir + "Program Files (x86)/VPNYour/maintenancetool.exe";
+        }
     } else if (runningOnMacOS()){
         appInstalledUninstallerPath = "/Applications/" + appName() + ".app/maintenancetool.app/Contents/MacOS/maintenancetool";
     } else if (runningOnLinux()){

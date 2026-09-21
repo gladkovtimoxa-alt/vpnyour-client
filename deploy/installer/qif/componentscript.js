@@ -64,12 +64,12 @@ Component.prototype.createOperations = function()
     if (runningOnWindows()) {
 
         component.addOperation("CreateShortcut", "@TargetDir@/" + appExecutableFileName(),
-                               QDesktopServices.storageLocation(QDesktopServices.DesktopLocation) + "/" + "VPNYour.lnk",
+                               QDesktopServices.storageLocation(QDesktopServices.DesktopLocation) + "/" + "SecretNet.lnk",
                                "workingDirectory=@TargetDir@", "iconPath=@TargetDir@\\" + appExecutableFileName(), "iconId=0");
 
 
         component.addElevatedOperation("CreateShortcut", "@TargetDir@/" + appExecutableFileName(),
-                                       installer.value("AllUsersStartMenuProgramsPath") + "/" + "VPNYour.lnk",
+                                       installer.value("AllUsersStartMenuProgramsPath") + "/" + "SecretNet.lnk",
                                        "workingDirectory=@TargetDir@", "iconPath=@TargetDir@\\" + appExecutableFileName(), "iconId=0");
 
         if (!vcRuntimeIsInstalled()) {

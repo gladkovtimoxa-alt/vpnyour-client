@@ -1,14 +1,14 @@
-set(CPACK_PACKAGE_VENDOR            VPNYour)
+set(CPACK_PACKAGE_VENDOR            SecretNet)
 set(CPACK_PACKAGE_VERSION           ${AMNEZIAVPN_VERSION})
 if(WIN32)
-    set(CPACK_PACKAGE_FILE_NAME "VPNYour_${AMNEZIAVPN_VERSION}_windows_x64")
+    set(CPACK_PACKAGE_FILE_NAME "SecretNet_${AMNEZIAVPN_VERSION}_windows_x64")
 elseif(APPLE AND NOT IOS AND NOT MACOS_NE)
-    set(CPACK_PACKAGE_FILE_NAME "VPNYour_${AMNEZIAVPN_VERSION}_macos_x64")
+    set(CPACK_PACKAGE_FILE_NAME "SecretNet_${AMNEZIAVPN_VERSION}_macos_x64")
 elseif(LINUX AND NOT ANDROID)
-    set(CPACK_PACKAGE_FILE_NAME "VPNYour_${AMNEZIAVPN_VERSION}_linux_x64")
+    set(CPACK_PACKAGE_FILE_NAME "SecretNet_${AMNEZIAVPN_VERSION}_linux_x64")
 endif()
-set(CPACK_PACKAGE_INSTALL_DIRECTORY VPNYour)
-set(CPACK_PACKAGE_EXECUTABLES       VPNYour VPNYour)
+set(CPACK_PACKAGE_INSTALL_DIRECTORY SecretNet)
+set(CPACK_PACKAGE_EXECUTABLES       SecretNet SecretNet)
 set(CPACK_PRE_BUILD_SCRIPTS         ${CMAKE_CURRENT_LIST_DIR}/sign_binaries.cmake)
 set(CPACK_POST_BUILD_SCRIPTS        ${CMAKE_CURRENT_LIST_DIR}/sign_packages.cmake)
 set(CPACK_PROJECT_CONFIG_FILE       ${CMAKE_CURRENT_LIST_DIR}/CPackOptions.cmake)
@@ -23,12 +23,16 @@ else()
 endif()
 
 # === CPack IFW generator settings ===
-# On Windows the client/service output exe are renamed to VPNYour(.exe) /
-# VPNYour-service(.exe) via OUTPUT_NAME (WIN32 only), so the installer's
-# Name-derived references (appExecutableFileName = VPNYour.exe,
-# serviceName = VPNYour-service) match the real binaries. Full VPNYour branding.
-set(CPACK_IFW_PACKAGE_NAME                          VPNYour)
-set(CPACK_IFW_PACKAGE_TITLE                         VPNYour)
+# На Windows клиент и служба переименованы через OUTPUT_NAME в SecretNet(.exe)
+# и SecretNet-service(.exe). Установщик выводит имена из CPACK_IFW_PACKAGE_NAME:
+# appExecutableFileName = <NAME>.exe, serviceName = <NAME>-service.
+# ПОЭТОМУ ТРИ ИМЕНИ ОБЯЗАНЫ СОВПАДАТЬ: client/CMakeLists.txt,
+# service/server/CMakeLists.txt и CPACK_IFW_PACKAGE_NAME здесь.
+# Рассогласование даёт ЗЕЛЁНУЮ сборку и НЕРАБОЧИЙ установщик: он ищет
+# несуществующий .exe и регистрирует службу с чужим именем. Поймано 21.09.2026
+# именно так — сборка прошла успешно, а связка была разорвана.
+set(CPACK_IFW_PACKAGE_NAME                          SecretNet)
+set(CPACK_IFW_PACKAGE_TITLE                         SecretNet)
 set(CPACK_IFW_PACKAGE_WIZARD_DEFAULT_WIDTH          600)
 set(CPACK_IFW_PACKAGE_WIZARD_DEFAULT_HEIGHT         380)
 set(CPACK_IFW_PACKAGE_WIZARD_STYLE                  Modern)
@@ -96,7 +100,7 @@ cpack_ifw_configure_component(AmneziaVPN
 
 include(CPack)
 cpack_add_component(Uninstall
-    DISPLAY_NAME "Uninstall VPNYour"
+    DISPLAY_NAME "Uninstall SecretNet"
     REQUIRES_ADMIN_RIGHTS
     DISABLED
 )
