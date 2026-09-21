@@ -148,7 +148,10 @@ bool WindowsTunnelService::start(const QString& configData) {
 
   logger.debug() << "Service:" << qApp->applicationFilePath();
 
-  service = CreateService(scm, TUNNEL_SERVICE_NAME, L"VPNYour (tunnel)",
+  // TUNNEL_SERVICE_NAME — идентификатор службы, его менять НЕЛЬЗЯ: по нему
+  // существующие установки находят свою службу. Меняется только отображаемое
+  // имя, которое видно в services.msc.
+  service = CreateService(scm, TUNNEL_SERVICE_NAME, L"SecretNet (tunnel)",
                           SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS,
                           SERVICE_DEMAND_START, SERVICE_ERROR_NORMAL,
                           (const wchar_t*)serviceCmdline.utf16(), nullptr, 0,
@@ -159,7 +162,7 @@ bool WindowsTunnelService::start(const QString& configData) {
   }
 
   SERVICE_DESCRIPTION sd = {
-      (wchar_t*)L"Manages the VPNYour tunnel connection"};
+      (wchar_t*)L"Manages the SecretNet tunnel connection"};
 
   if (!ChangeServiceConfig2(service, SERVICE_CONFIG_DESCRIPTION, &sd)) {
     WindowsUtils::windowsLog(

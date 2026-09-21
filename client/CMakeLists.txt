@@ -53,11 +53,14 @@ endif()
 
 qt_standard_project_setup()
 qt_add_executable(${PROJECT} MANUAL_FINALIZATION)
-# Windows: ship the client exe as VPNYour.exe (target name stays ${PROJECT} so
+# Windows: ship the client exe as SecretNet.exe (target name stays ${PROJECT} so
 # Android/other platforms are unaffected). Client<->service IPC is via a named
 # pipe and the firewall rule matches the dynamic path, so renaming is safe.
+# Латиница намеренно: видимое имя «Скрытая сеть» берётся из QML и переводов,
+# а имя файла и широкие строки Windows оставляем ASCII, чтобы не тянуть
+# вопросы кодировки в wchar_t-литералы и в имя исполняемого файла.
 if(WIN32)
-    set_target_properties(${PROJECT} PROPERTIES OUTPUT_NAME "VPNYour")
+    set_target_properties(${PROJECT} PROPERTIES OUTPUT_NAME "SecretNet")
 endif()
 target_include_directories(${PROJECT} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>

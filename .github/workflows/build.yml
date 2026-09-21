@@ -6,7 +6,7 @@ on:
       target:
         description: 'What to build'
         type: choice
-        options: [android]
+        options: [android, windows]
         default: android
   push:
     branches: [ main ]
@@ -14,6 +14,7 @@ on:
 jobs:
   android:
     name: Android AAB (universal)
+    if: github.event_name == 'push' || inputs.target == 'android'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -170,3 +171,75 @@ jobs:
           tag="aab-latest"
           gh release delete "$tag" -y --cleanup-tag 2>/dev/null || true
           gh release create "$tag" artifacts/VPNYour.aab artifacts/SecretNet-universal.apk             -t "Скрытая сеть — AAB + APK (latest)"             -n "Signed Android App Bundle (Google Play) and universal signed APK (sideload). Commit $GITHUB_SHA"             --target "$GITHUB_SHA"
+
+  windows:
+    name: Windows x64 installer
+    if: github.event_name == 'workflow_dispatch' && inputs.target == 'windows'
+    runs-on: windows-latest
+    env:
+      # Та же версия, что и у Android: откат на 6.7.x недопустим, в коде есть
+      # QML-импорты модулей, появившихся только в Qt 6.8+.
+      QT_VERSION: 6.10.3
+      QT_MODULES: 'qtremoteobjects qt5compat qtimageformats qtshadertools'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+
+      # build.bat ищет Qt по пути %QT_INSTALL_DIR%\Qt\<версия>\msvc2022_64,
+      # а Qt Installer Framework — по %QT_INSTALL_DIR%\Qt\Tools\QtInstallerFramework.
+      # install-qt-action с dir: раскладывает ровно так. Хост здесь windows,
+      # а НЕ all_os: переезд в all_os касался только target android.
+      - name: Install Qt desktop (msvc) + Installer Framework
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: windows
+          target: desktop
+          arch: win64_msvc2022_64
+          modules: ${{ env.QT_MODULES }}
+          tools: 'tools_ifw'
+          dir: ${{ runner.temp }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Conan
+        run: pip install "conan==2.28.0"
+
+      # vcvarsall.bat build.bat находит сам через vswhere — на windows-latest
+      # Visual Studio уже стоит, отдельный шаг настройки MSVC не нужен.
+      # Флага -t у build.bat НЕТ (в отличие от build.sh), только -i и -arch.
+      - name: Build client and IFW installer
+        shell: cmd
+        env:
+          QT_INSTALL_DIR: ${{ runner.temp }}
+        run: |
+          conan profile detect --force
+          deploy\build.bat -i ifw
+
+      - name: Collect installer
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          # Куда именно cpack кладёт результат, в build.bat не задано явно —
+          # ищем по дереву сборки и падаем громко, если не нашли, вместо
+          # выгрузки пустого артефакта.
+          exe=$(find deploy/build -maxdepth 2 -type f -name '*.exe' | head -1)
+          echo "found installer: $exe"
+          if [ -z "$exe" ]; then
+            echo "ERROR: установщик не найден. Содержимое deploy/build:"
+            ls -la deploy/build || true
+            exit 1
+          fi
+          cp "$exe" "artifacts/SecretNet-windows-x64.exe"
+          ls -la artifacts
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SecretNet-windows-x64
+          path: artifacts/SecretNet-windows-x64.exe

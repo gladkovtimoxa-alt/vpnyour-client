@@ -16,7 +16,7 @@
 
 // Internal SCM key kept as-is: it correlates with the WireGuard named pipe
 // (TUNNEL_NAMED_PIPE) and adapter name; renaming risks breaking the tunnel.
-// Only the user-visible display name/description are branded VPNYour.
+// Only the user-visible display name/description are branded SecretNet.
 #define TUNNEL_SERVICE_NAME L"AmneziaWGTunnel$AmneziaVPN"
 
 class WindowsDaemon final : public Daemon {
