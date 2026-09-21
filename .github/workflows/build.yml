@@ -20,13 +20,16 @@ jobs:
     env:
       ANDROID_PLATFORM: android-28
       NDK_VERSION: 27.0.11718014
-      # 6.10.3 больше не раздаётся для target=android (проверено 21.09.2026:
-      # aqt list-qt linux android показывает максимум 6.7.3, в
-      # download.qt.io/online/qtsdkrepository/linux_x64/android/ — максимум 6.6.3).
-      # Из-за этого сборка падала на шаге установки Qt, ещё до компиляции.
-      # 6.7.3 — последняя доступная для Android; проект требует просто Qt6
-      # (find_package(Qt6 REQUIRED) без минорной версии).
-      QT_VERSION: 6.7.3
+      # Qt 6.10.3 для Android НЕ пропадал — сломан был запрос, а не репозиторий.
+      # Начиная с Qt 6.8 Android-сборки переехали из хоста linux в хост all_os
+      # (проверено 21.09.2026: каталог
+      # download.qt.io/online/qtsdkrepository/all_os/android/qt6_6103/qt6_6103_arm64_v8a
+      # существует, а в linux_x64/android остались только версии <= 6.7.x).
+      # Отсюда host: all_os в шаге установки Android Qt ниже: со старым
+      # host: linux aqt искал в каталоге, где новых версий уже нет.
+      # Откат на 6.7.3 недопустим: там нет QtQmlMeta / QtLabsPlatform /
+      # QuickEffects, которые импортирует QML, и приложение падает при старте.
+      QT_VERSION: 6.10.3
       QT_MODULES: 'qtremoteobjects qt5compat qtimageformats qtshadertools'
       ABI: arm64-v8a
     steps:
@@ -60,31 +63,16 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VERSION }}
-          host: linux
+          host: all_os
           target: android
           arch: android_arm64_v8a
           modules: ${{ env.QT_MODULES }}
           dir: ${{ runner.temp }}
 
-      - name: Install Android Qt (armeabi-v7a)
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.QT_VERSION }}
-          host: linux
-          target: android
-          arch: android_armv7
-          modules: ${{ env.QT_MODULES }}
-          dir: ${{ runner.temp }}
-
-      - name: Install Android Qt (x86_64)
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.QT_VERSION }}
-          host: linux
-          target: android
-          arch: android_x86_64
-          modules: ${{ env.QT_MODULES }}
-          dir: ${{ runner.temp }}
+      # Qt под armeabi-v7a и x86_64 больше не скачиваем: сборка идёт только
+      # с --abi arm64-v8a, и build.sh берёт единственный toolchain_dir =
+      # android_arm64_v8a. Полтора лишних гигабайта на рантайме с и так
+      # дефицитным диском (см. шаг Free disk space) ничего не давали.
 
       - name: Setup Java 17
         uses: actions/setup-java@v4
