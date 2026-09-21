@@ -330,11 +330,11 @@ PageType {
                 clickedFunction: function() {
                     var fileName = ""
                     if (GC.isMobile()) {
-                        fileName = "vpnyour_sites.json"
+                        fileName = "set_sites.json"
                     } else {
                         fileName = SystemController.getFileName(qsTr("Save sites"),
                                                                 qsTr("Sites files (*.json)"),
-                                                                StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/vpnyour_sites",
+                                                                StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/set_sites",
                                                                 true,
                                                                 ".json")
                     }

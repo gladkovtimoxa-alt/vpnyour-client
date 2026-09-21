@@ -189,11 +189,11 @@ PageType {
                 clickedFunction: function() {
                     var fileName = ""
                     if (GC.isMobile()) {
-                        fileName = "vpnyour_killswitch_exceptions.json"
+                        fileName = "set_killswitch_exceptions.json"
                     } else {
                         fileName = SystemController.getFileName(qsTr("Save addresses"),
                                                                 qsTr("Address files (*.json)"),
-                                                                StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/vpnyour_killswitch_exceptions",
+                                                                StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/set_killswitch_exceptions",
                                                                 true,
                                                                 ".json")
                     }

@@ -50,35 +50,35 @@ PageType {
                 ExportController.generateConnectionConfig(serverId, containerIndex, clientNameTextField.textField.text);
                 configCaption = qsTr("Сохранить конфигурацию Скрытой сети")
                 configExtension = ".vpn"
-                configFileName = "vpnyour_config"
+                configFileName = "set_config"
                 break;
             }
             case PageShare.ConfigType.OpenVpn: {
                 ExportController.generateOpenVpnConfig(serverId, clientNameTextField.textField.text)
                 configCaption = qsTr("Сохранить конфигурацию открытого протокола")
                 configExtension = ".ovpn"
-                configFileName = "vpnyour_for_openvpn"
+                configFileName = "set_for_openvpn"
                 break
             }
             case PageShare.ConfigType.WireGuard: {
                 ExportController.generateWireGuardConfig(serverId, clientNameTextField.textField.text)
                 configCaption = qsTr("Сохранить конфигурацию Скрытой сети")
                 configExtension = ".conf"
-                configFileName = "vpnyour_for_wireguard"
+                configFileName = "set_for_wireguard"
                 break
             }
             case PageShare.ConfigType.Awg: {
                 ExportController.generateAwgConfig(serverId, containerIndex, clientNameTextField.textField.text)
                 configCaption = qsTr("Сохранить конфигурацию Скрытой сети")
                 configExtension = ".conf"
-                configFileName = "vpnyour_for_awg"
+                configFileName = "set_for_awg"
                 break
             }
             case PageShare.ConfigType.Xray: {
                 ExportController.generateXrayConfig(serverId, clientNameTextField.textField.text)
                 configCaption = qsTr("Save XRay config")
                 configExtension = ".json"
-                configFileName = "vpnyour_for_xray"
+                configFileName = "set_for_xray"
                 break
             }
             }

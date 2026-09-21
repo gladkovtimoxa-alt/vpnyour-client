@@ -28,7 +28,7 @@ PageType {
 
     property string configExtension: ".vpn"
     property string configCaption: qsTr("Сохранить конфигурацию Скрытой сети")
-    property string configFileName: "vpnyour_config"
+    property string configFileName: "set_config"
 
     // onVisibleChanged: {
     //     configExtension = ".vpn"

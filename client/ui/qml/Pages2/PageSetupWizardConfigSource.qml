@@ -325,7 +325,7 @@ PageType {
                 disabledColor: AmneziaStyle.color.mutedGray
                 textColor: AmneziaStyle.color.goldenApricot
 
-                text: qsTr("Сайт vpnyour")
+                text: qsTr("Наш сайт")
 
                 rightImageSource: "qrc:/images/controls/external-link.svg"
 
