@@ -118,7 +118,12 @@ jobs:
         run: |
           conan profile detect --force
           chmod +x deploy/build.sh
-          deploy/build.sh -t android --sign --aab --abi arm64-v8a --abi armeabi-v7a --abi x86_64
+          # Только arm64-v8a. Сборка трёх ABI сразу падала гонкой в conan:
+          # параллельные ABI-сборки дерутся за общий кеш и валятся с
+          # "ERROR: Reference 'cmake/3.31.12#...' already exists" +
+          # "OSError: [Errno 9] Bad file descriptor" (проверено 21.09.2026).
+          # arm64-v8a покрывает практически все актуальные устройства.
+          deploy/build.sh -t android --sign --aab --abi arm64-v8a
 
       - name: Collect AAB
         run: |
