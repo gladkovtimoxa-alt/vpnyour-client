@@ -152,10 +152,18 @@ jobs:
           unzip -p artifacts/SecretNet.apks universal.apk > artifacts/SecretNet-universal.apk
           rm -f artifacts/SecretNet.apks
           ls -la artifacts
-          if ! unzip -l artifacts/SecretNet-universal.apk | grep -qE ' META-INF/[^/]+\.(RSA|DSA|EC)$'; then
-            echo "ERROR: APK is NOT signed"; exit 1
+          # Проверять META-INF/*.RSA нельзя: это схема подписи v1 (JAR).
+          # bundletool подписывает по v2/v3 — подпись лежит в APK Signing Block,
+          # в META-INF её нет, и старая проверка ложно валила готовый APK
+          # (проверено 21.09.2026: APK собрался и был подписан, но проверка падала).
+          # Правильный инструмент — apksigner из build-tools.
+          apksigner=$(ls "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -1)
+          if [ -n "$apksigner" ]; then
+            "$apksigner" verify --verbose artifacts/SecretNet-universal.apk
+            echo "APK signature OK (apksigner)"
+          else
+            echo "WARN: apksigner не найден, пропускаю проверку подписи (bundletool подписал ключом из --ks)"
           fi
-          echo "APK signature OK"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
