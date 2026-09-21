@@ -49,7 +49,7 @@ PageType {
                 Layout.bottomMargin: 24
 
                 headerText: "DNS"
-                descriptionText: qsTr("A DNS service is installed on your server, and it is only accessible via VPN.\n") +
+                descriptionText: qsTr("Служба DNS установлена на вашем сервере и доступна только через защищённое соединение.\n") +
                                  qsTr("The DNS address is the same as the address of your server. You can configure DNS in the settings, under the connections tab.")
             }
         }

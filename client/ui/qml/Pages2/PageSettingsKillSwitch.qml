@@ -38,7 +38,7 @@ PageType {
                 Layout.rightMargin: 16
 
                 headerText: qsTr("KillSwitch")
-                descriptionText: qsTr("Enable to ensure network traffic goes through a secure VPN tunnel, preventing accidental exposure of your IP and DNS queries if the connection drops")
+                descriptionText: qsTr("Направляет сетевой трафик через защищённый туннель и предотвращает раскрытие IP-адреса и DNS-запросов при обрыве соединения")
 
                 showSwitcher: true
                 switcher {
@@ -66,7 +66,7 @@ PageType {
                 checked: !SettingsController.strictKillSwitchEnabled
 
                 text: qsTr("Soft KillSwitch")
-                descriptionText: qsTr("Internet access is blocked if the VPN disconnects unexpectedly")
+                descriptionText: qsTr("Доступ в интернет блокируется при неожиданном обрыве защищённого соединения")
 
                 onClicked: function() {
                     SettingsController.strictKillSwitchEnabled = false
@@ -90,11 +90,11 @@ PageType {
                 checked: SettingsController.strictKillSwitchEnabled
 
                 text: qsTr("Strict KillSwitch")
-                descriptionText: qsTr("Internet connection is blocked even when VPN is turned off manually or hasn't started")
+                descriptionText: qsTr("Интернет блокируется, даже если соединение отключено вручную или ещё не запущено")
 
                 onClicked: function() {
                     var headerText = qsTr("Just a little heads-up")
-                    var descriptionText = qsTr("If the VPN disconnects or drops while Strict KillSwitch is enabled, internet access will be blocked. To restore access, reconnect VPN or disable/change the KillSwitch.")
+                    var descriptionText = qsTr("Если при строгой блокировке соединение прервётся, доступ в интернет будет заблокирован. Для восстановления подключитесь снова либо отключите или измените KillSwitch.")
                     var yesButtonText = qsTr("Continue")
                     var noButtonText = qsTr("Cancel")
 

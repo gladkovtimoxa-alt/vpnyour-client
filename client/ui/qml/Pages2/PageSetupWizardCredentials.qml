@@ -141,7 +141,7 @@ PageType {
                 Layout.rightMargin: 16
                 Layout.bottomMargin: 16
 
-                text: qsTr("All data you enter will remain strictly confidential and will not be shared or disclosed to VPNYour or any third parties")
+                text: qsTr("Все введённые данные останутся строго конфиденциальными и не будут переданы Скрытой сети или третьим лицам")
             }
 
             CardWithIconsType {
@@ -152,7 +152,7 @@ PageType {
                 Layout.rightMargin: 16
                 Layout.bottomMargin: 16
 
-                headerText: qsTr("How to run your VPN server")
+                headerText: qsTr("Как запустить свой сервер")
                 bodyText: qsTr("Where to get connection data, step-by-step instructions for buying a VPS")
 
                 rightImageSource: "qrc:/images/controls/chevron-right.svg"

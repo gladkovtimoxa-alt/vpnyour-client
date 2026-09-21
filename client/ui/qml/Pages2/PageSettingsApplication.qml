@@ -85,7 +85,7 @@ PageType {
                 Layout.fillWidth: true
 
                 text: qsTr("Enable notifications")
-                descriptionText: qsTr("Enable notifications to show the VPN state in the status bar")
+                descriptionText: qsTr("Включите уведомления, чтобы видеть состояние соединения в строке состояния")
                 rightImageSource: "qrc:/images/controls/chevron-right.svg"
 
                 clickedFunction: function() {
@@ -129,7 +129,7 @@ PageType {
                 Layout.margins: 16
 
                 text: qsTr("Auto connect")
-                descriptionText: qsTr("Connect to VPN on app start")
+                descriptionText: qsTr("Подключаться при запуске приложения")
 
                 checked: SettingsController.isAutoConnectEnabled()
                 onToggled: function() {
@@ -240,7 +240,7 @@ PageType {
 
                 clickedFunction: function() {
                     var headerText = qsTr("Reset settings and remove all data from the application?")
-                    var descriptionText = qsTr("All settings will be reset to default. All installed VPNYour services will still remain on the server.")
+                    var descriptionText = qsTr("Все настройки будут сброшены. Установленные службы Скрытой сети останутся на сервере.")
                     var yesButtonText = qsTr("Continue")
                     var noButtonText = qsTr("Cancel")
 

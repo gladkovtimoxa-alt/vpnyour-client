@@ -247,9 +247,9 @@ ImportController::ImportResult ImportController::extractConfigFromQr(const QByte
     ImportResult result;
 
     QString dataStr = QString::fromUtf8(data);
-    ConfigTypes configType = checkConfigFormat(dataStr);
-    if (configType != ConfigTypes::Invalid) {
-        return extractConfigFromData(dataStr, "");
+    ImportResult extractedResult = extractConfigFromData(dataStr, "");
+    if (extractedResult.errorCode == ErrorCode::NoError) {
+        return extractedResult;
     }
 
     QJsonObject dataObj = QJsonDocument::fromJson(data).object();
@@ -737,8 +737,8 @@ void ImportController::checkForMaliciousStrings(const QJsonObject &serverConfig,
                 }
             }
 
-            warningText = "This configuration contains an OpenVPN setup. OpenVPN configurations can include malicious "
-                         "scripts, so only add it if you fully trust the provider of this config. ";
+            warningText = "Эта конфигурация содержит настройку открытого протокола. Такие конфигурации могут содержать "
+                          "вредоносные скрипты, поэтому добавляйте её, только если полностью доверяете поставщику. ";
 
             if (!maliciousStrings.isEmpty()) {
                 warningText += "<br>In the imported configuration, potentially dangerous lines were found:";

@@ -53,7 +53,7 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
-                headerText: qsTr("VPNYour settings")
+                headerText: qsTr("Настройки Скрытой сети")
             }
         }
 

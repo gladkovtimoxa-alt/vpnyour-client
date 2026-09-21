@@ -3,7 +3,7 @@
     android:height="256dp"
     android:viewportWidth="100"
     android:viewportHeight="100">
-  <!-- VPNYour brand mark (shield). Status-bar icons are monochrome: the system
+  <!-- Application brand mark (shield). Status-bar icons are monochrome: the system
        renders only the alpha silhouette, tinted white. Keep it a solid shield. -->
   <path
       android:pathData="M50,6 L88,22 V50 C88,74 71,92 50,98 C29,92 12,74 12,50 V22 Z"

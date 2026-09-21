@@ -32,14 +32,14 @@ QVariant ContainersModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case NameRole: {
         if (container == DockerContainer::Awg && !isThirdPartyConfig) {
-            return "VPNYour Legacy";
+            return "Скрытая сеть Legacy";
         }
         return ContainerUtils::containerHumanNames().value(container);
     }
     case DescriptionRole: {
         if (container == DockerContainer::Awg && !isThirdPartyConfig) {
-            return QObject::tr("VPNYour is a fast, modern and secure VPN protocol. "
-                           "It provides high connection speed and ensures stable operation even in the most challenging network conditions.");
+            return QObject::tr("Скрытая сеть — быстрый, современный и безопасный протокол. "
+                               "Он обеспечивает высокую скорость и стабильную работу даже в сложных сетевых условиях.");
         }
 
         return ContainerUtils::containerDescriptions().value(container);

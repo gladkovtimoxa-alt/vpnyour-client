@@ -179,7 +179,7 @@ PageType {
         id: clientLogs
 
         readonly property string title: qsTr("Client logs")
-        readonly property string description: qsTr("VPNYour logs")
+        readonly property string description: qsTr("Журналы Скрытой сети")
         readonly property bool isVisible: true
         readonly property var openLogsHandler: function() {
             SettingsController.openLogsFolder()
@@ -187,11 +187,11 @@ PageType {
         readonly property var exportLogsHandler: function() {
             var fileName = ""
             if (GC.isMobile()) {
-                fileName = "VPNYour.log"
+                fileName = "Скрытая сеть.log"
             } else {
                 fileName = SystemController.getFileName(qsTr("Save"),
                                                         qsTr("Logs files (*.log)"),
-                                                        StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/VPNYour",
+                                                        StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/Скрытая сеть",
                                                         true,
                                                         ".log")
             }
@@ -208,7 +208,7 @@ PageType {
         id: serviceLogs
 
         readonly property string title: qsTr("Service logs")
-        readonly property string description: qsTr("VPNYour-service logs")
+        readonly property string description: qsTr("Журналы службы Скрытой сети")
         readonly property bool isVisible: !GC.isMobile() && !IsMacOsNeBuild
         readonly property var openLogsHandler: function() {
             SettingsController.openServiceLogsFolder()
@@ -217,7 +217,7 @@ PageType {
             var fileName = ""
             fileName = SystemController.getFileName(qsTr("Save"),
                                                     qsTr("Logs files (*.log)"),
-                                                    StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/VPNYour-service",
+                                                    StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/Скрытая сеть-service",
                                                     true,
                                                     ".log")
             if (fileName !== "") {

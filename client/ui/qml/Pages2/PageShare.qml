@@ -48,28 +48,28 @@ PageType {
             switch (type) {
             case PageShare.ConfigType.AmneziaConnection: {
                 ExportController.generateConnectionConfig(serverId, containerIndex, clientNameTextField.textField.text);
-                configCaption = qsTr("Save VPNYour config")
+                configCaption = qsTr("Сохранить конфигурацию Скрытой сети")
                 configExtension = ".vpn"
                 configFileName = "vpnyour_config"
                 break;
             }
             case PageShare.ConfigType.OpenVpn: {
                 ExportController.generateOpenVpnConfig(serverId, clientNameTextField.textField.text)
-                configCaption = qsTr("Save OpenVPN config")
+                configCaption = qsTr("Сохранить конфигурацию открытого протокола")
                 configExtension = ".ovpn"
                 configFileName = "vpnyour_for_openvpn"
                 break
             }
             case PageShare.ConfigType.WireGuard: {
                 ExportController.generateWireGuardConfig(serverId, clientNameTextField.textField.text)
-                configCaption = qsTr("Save VPNYour config")
+                configCaption = qsTr("Сохранить конфигурацию Скрытой сети")
                 configExtension = ".conf"
                 configFileName = "vpnyour_for_wireguard"
                 break
             }
             case PageShare.ConfigType.Awg: {
                 ExportController.generateAwgConfig(serverId, containerIndex, clientNameTextField.textField.text)
-                configCaption = qsTr("Save VPNYour config")
+                configCaption = qsTr("Сохранить конфигурацию Скрытой сети")
                 configExtension = ".conf"
                 configFileName = "vpnyour_for_awg"
                 break
@@ -105,22 +105,22 @@ PageType {
 
     QtObject {
         id: amneziaConnectionFormat
-        readonly property string name: qsTr("For the VPNYour app")
+        readonly property string name: qsTr("Для приложения Скрытая сеть")
         readonly property int type: PageShare.ConfigType.AmneziaConnection
     }
     QtObject {
         id: openVpnConnectionFormat
-        readonly property string name: qsTr("OpenVPN native format")
+        readonly property string name: qsTr("Исходный формат открытого протокола")
         readonly property int type: PageShare.ConfigType.OpenVpn
     }
     QtObject {
         id: wireGuardConnectionFormat
-        readonly property string name: qsTr("VPNYour native format")
+        readonly property string name: qsTr("Исходный формат Скрытой сети")
         readonly property int type: PageShare.ConfigType.WireGuard
     }
     QtObject {
         id: awgConnectionFormat
-        readonly property string name: qsTr("VPNYour native format")
+        readonly property string name: qsTr("Исходный формат Скрытой сети")
         readonly property int type: PageShare.ConfigType.Awg
     }
     QtObject {
@@ -153,7 +153,7 @@ PageType {
                 Layout.fillWidth: true
                 Layout.topMargin: 24 + PageController.safeAreaTopMargin
 
-                headerText: qsTr("Share VPN Access")
+                headerText: qsTr("Поделиться доступом к защищённому соединению")
 
                 actionButtonImage: "qrc:/images/controls/more-vertical.svg"
                 actionButtonFunction: function() {
@@ -187,7 +187,7 @@ PageType {
                             Layout.leftMargin: 16
                             Layout.rightMargin: 16
 
-                            headerText: qsTr("Share full access to the server and VPN")
+                            headerText: qsTr("Поделиться полным доступом к серверу и соединению")
                             descriptionText: qsTr("Use for your own devices, or share with those you trust to manage the server.")
                         }
 
@@ -268,7 +268,7 @@ PageType {
 
                 visible: accessTypeSelector.currentIndex === 0
 
-                text: qsTr("Share VPN access without the ability to manage the server")
+                text: qsTr("Поделиться доступом к соединению без управления сервером")
                 color: AmneziaStyle.color.mutedGray
             }
 

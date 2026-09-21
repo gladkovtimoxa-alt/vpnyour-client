@@ -56,7 +56,7 @@ DrawerType2 {
             Layout.rightMargin: 16
             Layout.leftMargin: 16
 
-            text: qsTr("Renew to continue using VPN")
+            text: qsTr("Продлите подписку, чтобы продолжить пользоваться защищённым соединением")
             horizontalAlignment: Text.AlignLeft
         }
 

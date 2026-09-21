@@ -88,7 +88,7 @@ PageType {
                     Layout.fillWidth: true
                     headerText: qsTr("XRay VLESS settings")
                     descriptionLinkText: qsTr("More about settings")
-                    descriptionLinkUrl: "https://vpnyour.ru/"
+                    descriptionLinkUrl: "https://netsecretnet.ru/"
                 }
 
                 ImageButtonType {

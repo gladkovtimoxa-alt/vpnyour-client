@@ -38,7 +38,7 @@ PageType {
 
     function protocolDisplayName(protocol) {
         switch (protocol) {
-        case "awg": return "VPNYour"
+        case "awg": return "Скрытая сеть"
         case "vless": return "VLESS"
         default: return protocol
         }
@@ -494,7 +494,7 @@ PageType {
 
                         text: ServersUiController.defaultServerDefaultContainerName
                         textColor: AmneziaStyle.color.midnightBlack
-                        headerText: qsTr("VPN protocol")
+                        headerText: qsTr("Протокол подключения")
                         headerBackButtonImage: "qrc:/images/controls/arrow-left.svg"
 
                         rootButtonClickedFunction: function() {
@@ -612,7 +612,7 @@ PageType {
                     Layout.leftMargin: 16
                     Layout.rightMargin: 16
 
-                    headerText: qsTr("VPN protocol")
+                    headerText: qsTr("Протокол подключения")
                 }
             }
 

@@ -86,7 +86,7 @@ class CameraActivity : ComponentActivity() {
                 ACTION_DOWN -> true
                 ACTION_UP -> {
                     val point = viewFinder
-                        .meteringPointFactory.createPoint(motionEvent.x, motionEvent.x)
+                        .meteringPointFactory.createPoint(motionEvent.x, motionEvent.y)
 
                     val action = FocusMeteringAction
                         .Builder(point, FLAG_AF or FLAG_AE).build()
@@ -121,21 +121,17 @@ class CameraActivity : ComponentActivity() {
                 ).build()
         )
 
-        // optimization
-        val checkedBarcodes = hashSetOf<String>()
-
         imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this)) { imageProxy ->
             imageProxy.image?.let { InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees) }
                 ?.let { image ->
                     barcodeScanner.process(image).addOnSuccessListener { barcodes ->
                         barcodes.firstOrNull()?.let { barcode ->
-                            barcode.displayValue?.let { code ->
-                                if (code.isNotEmpty() && code !in checkedBarcodes) {
+                            (barcode.rawValue?.takeIf { it.isNotEmpty() } ?: barcode.displayValue)?.let { code ->
+                                if (code.isNotEmpty()) {
                                     if (QtAndroidController.decodeQrCode(code)) {
                                         barcodeScanner.close()
                                         stopCamera()
                                     }
-                                    checkedBarcodes.add(code)
                                 }
                             }
                         }

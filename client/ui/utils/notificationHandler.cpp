@@ -54,15 +54,15 @@ void NotificationHandler::setConnectionState(Vpn::ConnectionState state)
     case Vpn::ConnectionState::Connected:
         m_connected = true;
 
-        title = tr("VPNYour");
-        message = tr("VPN Connected");
+        title = tr("Скрытая сеть");
+        message = tr("Защищённое соединение установлено");
         break;
 
     case Vpn::ConnectionState::Disconnected:
         if (m_connected) {
             m_connected = false;
-            title = tr("VPNYour");
-            message = tr("VPN Disconnected");
+            title = tr("Скрытая сеть");
+            message = tr("Защищённое соединение отключено");
         }
         break;
 
@@ -85,7 +85,7 @@ void NotificationHandler::unsecuredNetworkNotification(const QString& networkNam
     qDebug() << "Unsecured network notification shown";
 
 
-    QString title = tr("VPNYour notification");
+    QString title = tr("Уведомление Скрытой сети");
     QString message = tr("Unsecured network detected: ") + networkName;
 
     notifyInternal(UnsecuredNetwork, title, message, 2000);

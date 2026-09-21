@@ -52,7 +52,7 @@ PageType {
                 Layout.rightMargin: 16
                 Layout.leftMargin: 16
 
-                headerText: qsTr("OpenVPN Settings")
+                headerText: qsTr("Настройки открытого протокола")
             }
         }
 
@@ -73,7 +73,7 @@ PageType {
 
                 enabled: listView.enabled
 
-                headerText: qsTr("VPN address subnet")
+                headerText: qsTr("Подсеть адресов подключения")
                 textField.text: subnetAddress
 
                 textField.onEditingFinished: {
@@ -319,7 +319,7 @@ PageType {
                         id: blockDnsCheckBox
                         Layout.fillWidth: true
 
-                        text: qsTr("Block DNS requests outside of VPN")
+                        text: qsTr("Блокировать DNS-запросы вне защищённого соединения")
                         checked: blockDns
 
                         onCheckedChanged: {

@@ -46,14 +46,14 @@ PageType {
     QtObject {
         id: onlyForwardApps
 
-        readonly property string name: qsTr("Only the apps from the list should have access via VPN")
+        readonly property string name: qsTr("Только приложения из списка используют защищённое соединение")
         readonly property int type: routeMode.onlyForwardApps
     }
 
     QtObject {
         id: allExceptApps
         
-        readonly property string name: qsTr("Apps from the list should not have access via VPN")
+        readonly property string name: qsTr("Приложения из списка не используют защищённое соединение")
         readonly property int type: routeMode.allExceptApps
     }
 
@@ -151,7 +151,7 @@ PageType {
             Layout.leftMargin: 16
             Layout.rightMargin: 16
 
-            textString: qsTr("Only \"Apps from the list should not have access via VPN\" mode is available on Windows")
+            textString: qsTr("На Windows доступен только режим «Приложения из списка не используют защищённое соединение»")
             iconPath: "qrc:/images/controls/alert-circle.svg"
 
             visible: (Qt.platform.os === "windows") && root.pageEnabled

@@ -129,7 +129,7 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
-                text: qsTr("Enable VPNYour obfuscation. It may be useful if VPNYour is blocked on your provider.")
+                text: qsTr("Включить обфускацию Скрытой сети. Это может помочь, если провайдер блокирует соединение.")
             }
         }
 

@@ -57,7 +57,7 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
-                text: qsTr("VPNYour")
+                text: qsTr("Скрытая сеть")
                 horizontalAlignment: Text.AlignHCenter
             }
 
@@ -72,7 +72,7 @@ PageType {
                 height: 20
                 font.pixelSize: 14
 
-                text: qsTr("VPNYour — a fast and private VPN service with AES-256 encryption on all your devices.")
+                text: qsTr("Скрытая сеть — быстрый и приватный сервис с шифрованием AES-256 на всех ваших устройствах.")
                 color: AmneziaStyle.color.paleGray
             }
 
@@ -148,7 +148,7 @@ PageType {
                 text: qsTr("Check for updates")
 
                 clickedFunc: function() {
-                    Qt.openUrlExternally("https://vpnyour.ru/")
+                    Qt.openUrlExternally("https://netsecretnet.ru/")
                 }
             }
 
@@ -169,7 +169,7 @@ PageType {
                 text: qsTr("Privacy Policy")
 
                 clickedFunc: function() {
-                    Qt.openUrlExternally("https://vpnyour.ru/privacy")
+                    Qt.openUrlExternally("https://netsecretnet.ru/privacy")
                 }
             }
         }
@@ -195,11 +195,11 @@ PageType {
     QtObject {
         id: mail
 
-        readonly property string title: qsTr("support@vpnyour.ru")
+        readonly property string title: qsTr("support@netsecretnet.ru")
         readonly property string description: qsTr("For reviews and bug reports")
         readonly property string imageSource: "qrc:/images/controls/mail.svg"
         readonly property var handler: function() {
-            Qt.openUrlExternally("mailto:support@vpnyour.ru")
+            Qt.openUrlExternally("mailto:support@netsecretnet.ru")
         }
     }
 
@@ -210,7 +210,7 @@ PageType {
         readonly property string description: qsTr("Discover the source code")
         readonly property string imageSource: "qrc:/images/controls/github.svg"
         readonly property var handler: function() {
-            Qt.openUrlExternally("https://vpnyour.ru/")
+            Qt.openUrlExternally("https://netsecretnet.ru/")
         }
     }
 
@@ -221,7 +221,7 @@ PageType {
         readonly property string description: qsTr("Visit official website")
         readonly property string imageSource: "qrc:/images/controls/globe-2.svg"
         readonly property var handler: function() {
-            Qt.openUrlExternally("https://vpnyour.ru/")
+            Qt.openUrlExternally("https://netsecretnet.ru/")
         }
     }
 }

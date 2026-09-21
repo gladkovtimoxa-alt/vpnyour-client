@@ -32,7 +32,7 @@ DrawerType2 {
             Layout.bottomMargin: 16
 
             headerText: qsTr("Split tunneling")
-            descriptionText:  qsTr("Allows you to connect to some sites or applications through a VPN connection and bypass others")
+            descriptionText:  qsTr("Позволяет открывать одни сайты и приложения через защищённое соединение, а другие — напрямую")
         }
 
         LabelWithButtonType {

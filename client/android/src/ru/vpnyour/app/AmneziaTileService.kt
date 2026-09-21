@@ -29,7 +29,7 @@ import ru.vpnyour.app.protocol.ProtocolState.UNKNOWN
 import ru.vpnyour.app.util.Log
 
 private const val TAG = "AmneziaTileService"
-private const val DEFAULT_TILE_LABEL = "VPNYour"
+private const val DEFAULT_TILE_LABEL = "Скрытая сеть"
 
 class AmneziaTileService : TileService() {
 

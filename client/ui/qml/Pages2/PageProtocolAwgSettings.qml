@@ -65,7 +65,7 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
-                headerText: qsTr("VPNYour settings")
+                headerText: qsTr("Настройки Скрытой сети")
             }
 
             TextFieldWithHeaderType {
@@ -78,7 +78,7 @@ PageType {
 
                 enabled: delegateItem.isEnabled
 
-                headerText: qsTr("VPN address subnet")
+                headerText: qsTr("Подсеть адресов подключения")
                 textField.text: subnetAddress
 
                 textField.onEditingFinished: {

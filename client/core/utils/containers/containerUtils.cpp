@@ -63,12 +63,12 @@ QList<DockerContainer> ContainerUtils::allContainers()
 QMap<DockerContainer, QString> ContainerUtils::containerHumanNames()
 {
     return { { DockerContainer::None, "Not installed" },
-             { DockerContainer::OpenVpn, "OpenVPN" },
-             { DockerContainer::ShadowSocks, "OpenVPN over SS" },
-             { DockerContainer::Cloak, "OpenVPN over Cloak" },
-             { DockerContainer::WireGuard, "VPNYour" },
-             { DockerContainer::Awg, "VPNYour" },
-             { DockerContainer::Awg2, "VPNYour" },
+             { DockerContainer::OpenVpn, "Открытый протокол" },
+             { DockerContainer::ShadowSocks, "Открытый протокол через SS" },
+             { DockerContainer::Cloak, "Открытый протокол через Cloak" },
+             { DockerContainer::WireGuard, "Скрытая сеть" },
+             { DockerContainer::Awg, "Скрытая сеть" },
+             { DockerContainer::Awg2, "Скрытая сеть" },
              { DockerContainer::Xray, "XRay" },
              { DockerContainer::Ipsec, QObject::tr("IPsec") },
              { DockerContainer::SSXray, "Shadowsocks"},
@@ -85,23 +85,19 @@ QMap<DockerContainer, QString> ContainerUtils::containerHumanNames()
 QMap<DockerContainer, QString> ContainerUtils::containerDescriptions()
 {
     return {              { DockerContainer::OpenVpn,
-               QObject::tr("OpenVPN is the most popular VPN protocol, with flexible configuration options. It uses its "
-                           "own security protocol with SSL/TLS for key exchange.") },
+               QObject::tr("Популярный протокол с гибкими настройками. Для обмена ключами используется SSL/TLS.") },
              { DockerContainer::ShadowSocks,
                QObject::tr("This protocol is no longer supported.") },
              { DockerContainer::Cloak,
                QObject::tr("This protocol is no longer supported.") },
              { DockerContainer::WireGuard,
-               QObject::tr("VPNYour - popular VPN protocol with high performance, high speed and low power "
-                           "consumption.") },
+               QObject::tr("Скрытая сеть — популярный протокол с высокой скоростью и низким энергопотреблением.") },
              { DockerContainer::Awg,
-               QObject::tr("VPNYour is a fast, modern and secure VPN protocol. "
-                           "It provides high connection speed and ensures stable operation even in the most challenging network conditions.") },
+               QObject::tr("Скрытая сеть — быстрый, современный и безопасный протокол. Он стабильно работает даже в сложных сетевых условиях.") },
              { DockerContainer::Awg2,
-               QObject::tr("VPNYour is a fast, modern and secure VPN protocol. "
-                           "It provides high connection speed and ensures stable operation even in the most challenging network conditions.") },
+               QObject::tr("Скрытая сеть — быстрый, современный и безопасный протокол. Он стабильно работает даже в сложных сетевых условиях.") },
              { DockerContainer::Xray,
-               QObject::tr("XRay with REALITY masks VPN traffic as web traffic and protects against active probing. "
+               QObject::tr("XRay с REALITY маскирует защищённый трафик под веб-трафик и защищает от активного зондирования. "
                            "It is highly resistant to detection and offers high speed.") },
              { DockerContainer::Ipsec,
                QObject::tr("IKEv2/IPsec -  Modern stable protocol, a bit faster than others, restores connection after "
@@ -125,34 +121,34 @@ QMap<DockerContainer, QString> ContainerUtils::containerDetailedDescriptions()
 {
     return {
         { DockerContainer::OpenVpn,
-          QObject::tr("OpenVPN is one of the most popular and reliable VPN protocols. "
+          QObject::tr("Это один из самых популярных и надёжных протоколов. "
                       "It uses SSL/TLS encryption, supports a wide variety of devices and operating systems, "
                       "and is continuously improved by the community due to its open-source nature. "
                       "It provides a good balance between speed and security but is easily recognized by DPI systems, "
                       "making it susceptible to blocking.\n"
                       "\nFeatures:\n"
-                      "* Available on all VPNYour platforms\n"
+                      "* Доступен на всех платформах Скрытой сети\n"
                       "* Normal battery consumption on mobile devices\n"
                       "* Flexible customization for various devices and OS\n"
                       "* Operates over both TCP and UDP protocols") },
         { DockerContainer::WireGuard,
-          QObject::tr("VPNYour is a modern, streamlined VPN protocol offering stable connectivity and excellent performance across all devices. "
-                      "It uses fixed encryption settings, delivering lower latency and higher data transfer speeds compared to OpenVPN. "
-                      "However, VPNYour is easily identifiable by DPI systems due to its distinctive packet signatures, making it susceptible to blocking.\n"
+          QObject::tr("Скрытая сеть — современный протокол со стабильным соединением и высокой производительностью на всех устройствах. "
+                      "Фиксированные настройки шифрования обеспечивают низкую задержку и высокую скорость передачи данных. "
+                      "Протокол может распознаваться системами DPI по характерным сигнатурам пакетов.\n"
                       "\nFeatures:\n"
-                      "* Available on all VPNYour platforms\n"
+                      "* Доступен на всех платформах Скрытой сети\n"
                       "* Low power consumption on mobile devices\n"
                       "* Minimal configuration required\n"
                       "* Easily detected by DPI systems (susceptible to blocking)\n"
                       "* Operates over UDP protocol") },
         { DockerContainer::Awg2,
-          QObject::tr("VPNYour is a modern VPN protocol, "
+          QObject::tr("Скрытая сеть — современный протокол, "
                       "combining simplified architecture with high performance across all devices. "
-                      "It addresses VPNYour's main vulnerability (easy detection by DPI systems) through advanced obfuscation techniques, "
-                      "making VPN traffic indistinguishable from regular internet traffic.\n"
-                      "\nVPNYour is an excellent choice for those seeking a fast, stealthy VPN connection.\n"
+                      "Он снижает риск обнаружения системами DPI с помощью современных методов обфускации, "
+                      "делая защищённый трафик неотличимым от обычного интернет-трафика.\n"
+                      "\nЭто отличный выбор для быстрого и незаметного защищённого соединения.\n"
                       "\nFeatures:\n"
-                      "* Available on all VPNYour platforms\n"
+                      "* Доступен на всех платформах Скрытой сети\n"
                       "* Low battery consumption on mobile devices\n"
                       "* Minimal settings required\n"
                       "* Undetectable by traffic analysis systems (DPI)\n"
@@ -161,7 +157,7 @@ QMap<DockerContainer, QString> ContainerUtils::containerDetailedDescriptions()
           QObject::tr("REALITY is an innovative protocol developed by the creators of XRay, designed specifically to combat high levels of internet censorship. "
                       "REALITY identifies censorship systems during the TLS handshake, "
                       "redirecting suspicious traffic seamlessly to legitimate websites like google.com while providing genuine TLS certificates. "
-                      "This allows VPN traffic to blend indistinguishably with regular web traffic without special configuration."
+                      "Это позволяет защищённому трафику сливаться с обычным веб-трафиком без специальной настройки."
                       "\nUnlike older protocols such as VMess, VLESS, and XTLS-Vision, REALITY incorporates an advanced built-in \"friend-or-foe\" detection mechanism, "
                       "effectively protecting against DPI and other traffic analysis methods.\n"
                       "\nFeatures:\n"
@@ -171,11 +167,11 @@ QMap<DockerContainer, QString> ContainerUtils::containerDetailedDescriptions()
                       "* Minimal battery consumption on devices\n"
                       "* Operates over TCP protocol") },
         { DockerContainer::Ipsec,
-          QObject::tr("IKEv2, combined with IPSec encryption, is a modern and reliable VPN protocol. "
+          QObject::tr("IKEv2 в сочетании с шифрованием IPSec — современный и надёжный протокол. "
                       "It reconnects quickly when switching networks or devices, making it ideal for dynamic network environments. "
                       "While it provides good security and speed, it's easily recognized by DPI systems and susceptible to blocking.\n"
                       "\nFeatures:\n"
-                      "* Available in VPNYour only on Windows\n"
+                      "* В Скрытой сети доступен только на Windows\n"
                       "* Low battery consumption on mobile devices\n"
                       "* Minimal configuration required\n"
                       "* Detectable by DPI analysis systems(easily blocked)\n"
@@ -184,7 +180,7 @@ QMap<DockerContainer, QString> ContainerUtils::containerDetailedDescriptions()
         { DockerContainer::TorWebSite, QObject::tr("Website in Tor network") },
         { DockerContainer::Dns, QObject::tr("DNS Service") },
         { DockerContainer::Sftp,
-          QObject::tr("After installation, VPNYour will create a\n\n file storage on your server. "
+          QObject::tr("После установки Скрытая сеть создаст\n\n файловое хранилище на вашем сервере. "
                       "You will be able to access it using\n FileZilla or other SFTP clients, "
                       "as well as mount the disk on your device to access\n it directly from your device.\n\n"
                       "For more detailed information, you can\n find it in the support section under \"Create SFTP file storage.\" ") },
@@ -335,8 +331,8 @@ QString ContainerUtils::easySetupHeader(DockerContainer container)
 QString ContainerUtils::easySetupDescription(DockerContainer container)
 {
     switch (container) {
-    case DockerContainer::Awg2: return QObject::tr("VPNYour protocol will be installed. "
-                                         "It provides high connection speed and ensures stable operation even in the most challenging network conditions.");
+    case DockerContainer::Awg2: return QObject::tr("Будет установлен протокол Скрытой сети. "
+                                         "Он обеспечивает высокую скорость и стабильную работу даже в сложных сетевых условиях.");
     default: return "";
     }
 }

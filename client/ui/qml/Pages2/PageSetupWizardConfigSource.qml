@@ -108,11 +108,11 @@ PageType {
                             clickedFunction: function() {
                                 var fileName = ""
                                 if (GC.isMobile()) {
-                                    fileName = "VPNYour.log"
+                                    fileName = "Скрытая сеть.log"
                                 } else {
                                     fileName = SystemController.getFileName(qsTr("Save"),
                                                                             qsTr("Logs files (*.log)"),
-                                                                            StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/VPNYour",
+                                                                            StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/Скрытая сеть",
                                                                             true,
                                                                             ".log")
                                 }
@@ -330,7 +330,7 @@ PageType {
                 rightImageSource: "qrc:/images/controls/external-link.svg"
 
                 clickedFunc: function() {
-                    Qt.openUrlExternally("https://vpnyour.ru/")
+                    Qt.openUrlExternally("https://netsecretnet.ru/")
                 }
             }
         }
@@ -359,8 +359,8 @@ PageType {
         id: selfHostVpn
 
         property bool featuredAmneziaConnection: false
-        property string title: qsTr("Self-hosted VPN")
-        property string description: qsTr("Configure VPNYour on your own server")
+        property string title: qsTr("Собственный сервер")
+        property string description: qsTr("Настройте Скрытую сеть на своём сервере")
         property string imageSource: "qrc:/images/controls/server.svg"
         property bool isVisible: true
         property var handler: function() {

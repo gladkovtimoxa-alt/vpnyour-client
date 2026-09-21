@@ -97,7 +97,7 @@ PageType {
                 Layout.fillWidth: true
 
                 text: qsTr("Site-based split tunneling")
-                descriptionText: qsTr("Allows you to select which sites you want to access through the VPN")
+                descriptionText: qsTr("Позволяет выбрать сайты, которые будут открываться через защищённое подключение")
                 rightImageSource: "qrc:/images/controls/chevron-right.svg"
 
                 clickedFunction: function() {
@@ -121,7 +121,7 @@ PageType {
                 Layout.fillWidth: true
 
                 text: qsTr("App-based split tunneling")
-                descriptionText: qsTr("Allows you to use the VPN only for certain Apps")
+                descriptionText: qsTr("Позволяет использовать защищённое подключение только для выбранных приложений")
                 rightImageSource: "qrc:/images/controls/chevron-right.svg"
 
                 clickedFunction: function() {
@@ -140,7 +140,7 @@ PageType {
                 Layout.fillWidth: true
 
                 text: qsTr("KillSwitch")
-                descriptionText: qsTr("Blocks network connections without VPN")
+                descriptionText: qsTr("Блокирует сетевые подключения без защищённого соединения")
                 rightImageSource: "qrc:/images/controls/chevron-right.svg"
 
                 clickedFunction: function() {

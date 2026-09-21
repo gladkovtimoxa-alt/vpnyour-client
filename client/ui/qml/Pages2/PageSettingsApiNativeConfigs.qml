@@ -20,7 +20,7 @@ PageType {
     id: root
 
     property string configExtension: ".conf"
-    property string configCaption: qsTr("Save VPNYour config")
+    property string configCaption: qsTr("Сохранить конфигурацию Скрытой сети")
 
     BackButtonType {
         id: backButton
@@ -58,7 +58,7 @@ PageType {
                 Layout.leftMargin: 16
 
                 headerText: qsTr("Configuration Files")
-                descriptionText: qsTr("For router setup or the VPNYour app")
+                descriptionText: qsTr("Для настройки роутера или приложения Скрытая сеть")
             }
         }
 

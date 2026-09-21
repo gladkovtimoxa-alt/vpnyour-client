@@ -27,12 +27,12 @@ PageType {
     property bool isSelfHostedConfig: true
 
     property string configExtension: ".vpn"
-    property string configCaption: qsTr("Save VPNYour config")
+    property string configCaption: qsTr("Сохранить конфигурацию Скрытой сети")
     property string configFileName: "vpnyour_config"
 
     // onVisibleChanged: {
     //     configExtension = ".vpn"
-    //     configCaption = qsTr("Save VPNYour config")
+    //     configCaption = qsTr("Сохранить конфигурацию Скрытой сети")
     //     configFileName = "amnezia_config"
 
     //     if (visible) {
@@ -320,7 +320,7 @@ PageType {
                 Layout.rightMargin: 16
                 visible: isQrCodeVisible
                 horizontalAlignment: Text.AlignHCenter
-                text: qsTr("To read the QR code in the VPNYour app, tap + in the main menu → 'QR code'")
+                text: qsTr("Чтобы считать QR-код в приложении Скрытая сеть, нажмите + в главном меню → «QR-код»")
             }
         }
     }

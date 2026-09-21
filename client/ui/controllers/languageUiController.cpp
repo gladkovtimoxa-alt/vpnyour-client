@@ -71,7 +71,7 @@ LanguageSettings::AvailableLanguageEnum LanguageUiController::getSystemLanguageE
 
 QString LanguageUiController::getCurrentSiteUrl(const QString &path) const
 {
-    return QString("https://vpnyour.ru") + (path.isEmpty() ? "" : (QString("/%1").arg(path)));
+    return QString("https://netsecretnet.ru") + (path.isEmpty() ? "" : (QString("/%1").arg(path)));
 }
 
 QString LanguageUiController::getCurrentDocsUrl(const QString &path) const

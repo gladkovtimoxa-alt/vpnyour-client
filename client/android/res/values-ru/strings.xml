@@ -12,14 +12,14 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
 
-    <string name="vpnGranted">VPN-подключение разрешено</string>
-    <string name="vpnSetupFailed">Ошибка настройки VPN</string>
-    <string name="vpnSetupFailedMessage">Чтобы подключиться к VPNYour необходимо:\n\n- Разрешить приложению подключаться к сети VPN\n- Отключить функцию \"Постоянная VPN\" для всех остальных VPN-приложений в системных настройках VPN</string>
-    <string name="openVpnSettings">Открыть настройки VPN</string>
+    <string name="vpnGranted">Подключение разрешено</string>
+    <string name="vpnSetupFailed">Ошибка настройки подключения</string>
+    <string name="vpnSetupFailedMessage">Чтобы подключиться, разрешите приложению настроить соединение и отключите функцию постоянного подключения для других подобных приложений в системном разделе управления подключениями.</string>
+    <string name="openVpnSettings">Открыть системные настройки</string>
 
-    <string name="notificationChannelDescription">Уведомления сервиса VPNYour</string>
-    <string name="notificationDialogTitle">Сервис VPNYour</string>
-    <string name="notificationDialogMessage">Показывать статус VPN в строке состояния?</string>
+    <string name="notificationChannelDescription">Уведомления сервиса Скрытая сеть</string>
+    <string name="notificationDialogTitle">Сервис Скрытая сеть</string>
+    <string name="notificationDialogMessage">Показывать состояние соединения в строке состояния?</string>
     <string name="notificationSettingsDialogTitle">Настройки уведомлений</string>
     <string name="notificationSettingsDialogMessage">Для показа уведомлений необходимо включить уведомления в системных настройках</string>
     <string name="openNotificationSettings">Открыть настройки уведомлений</string>

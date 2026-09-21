@@ -12,7 +12,7 @@ enum class VpnProto(
     val serviceClass: Class<out AmneziaVpnService>
 ) {
     WIREGUARD(
-        "VPNYour",
+        "Скрытая сеть",
         "ru.vpnyour.app:amneziaAwgService",
         AwgService::class.java
     ) {
@@ -20,7 +20,7 @@ enum class VpnProto(
     },
 
     AWG(
-        "VPNYour",
+        "Скрытая сеть",
         "ru.vpnyour.app:amneziaAwgService",
         AwgService::class.java
     ) {
@@ -28,7 +28,7 @@ enum class VpnProto(
     },
 
     OPENVPN(
-        "OpenVPN",
+        "Классический",
         "ru.vpnyour.app:amneziaOpenVpnService",
         OpenVpnService::class.java
     ) {

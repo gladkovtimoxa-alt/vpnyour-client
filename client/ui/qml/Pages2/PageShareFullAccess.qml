@@ -54,7 +54,7 @@ PageType {
                 Layout.rightMargin: 16
                 Layout.topMargin: 24
 
-                headerText: qsTr("Full access to the server and VPN")
+                headerText: qsTr("Полный доступ к серверу и защищённому соединению")
             }
 
             ParagraphTextType {
@@ -65,7 +65,7 @@ PageType {
                 Layout.bottomMargin: 24
 
                 text: qsTr("We recommend that you use full access to the server only for your own additional devices.\n") +
-                      qsTr("If you share full access with other people, they can remove and add protocols and services to the server, which will cause the VPN to work incorrectly for all users. ")
+                      qsTr("Если предоставить полный доступ другим людям, они смогут удалять и добавлять протоколы и службы на сервере, из-за чего соединение может работать неправильно у всех пользователей. ")
                 color: AmneziaStyle.color.mutedGray
             }
 

@@ -136,7 +136,7 @@ PageType {
                 Layout.rightMargin: 16
 
                 headerText: qsTr("Manual")
-                bodyText: qsTr("Choose a VPN protocol")
+                bodyText: qsTr("Выберите протокол подключения")
 
                 ButtonGroup.group: buttonGroup
 

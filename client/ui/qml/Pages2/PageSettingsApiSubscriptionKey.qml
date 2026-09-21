@@ -118,7 +118,7 @@ PageType {
                     var fileName = GC.isMobile()
                         ? root.processedServer.name.toLowerCase().replace(/\s+/g, "_") + "_key.vpn"
                         : SystemController.getFileName(
-                            qsTr("Save VPNYour config"),
+                            qsTr("Сохранить конфигурацию Скрытой сети"),
                             qsTr("Config files (*.vpn)"),
                             StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/" + root.processedServer.name.toLowerCase().replace(/\s+/g, "_") + "_key",
                             true,
@@ -188,7 +188,7 @@ PageType {
                 Layout.rightMargin: 16
                 visible: SubscriptionUiController.qrCodesCount > 0
                 horizontalAlignment: Text.AlignHCenter
-                text: qsTr("To read the QR code in the VPNYour app, tap + in the main menu → 'QR code'")
+                text: qsTr("Чтобы считать QR-код в приложении Скрытая сеть, нажмите + в главном меню → «QR-код»")
             }
         }
     }

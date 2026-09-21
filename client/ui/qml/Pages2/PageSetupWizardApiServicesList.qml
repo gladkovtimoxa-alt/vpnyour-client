@@ -49,8 +49,8 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.bottomMargin: 24
 
-                headerText: qsTr("VPNYour")
-                descriptionText: qsTr("Choose a VPN service that suits your needs.")
+                headerText: qsTr("Скрытая сеть")
+                descriptionText: qsTr("Выберите подходящий сервис защищённого соединения.")
             }
         }
 

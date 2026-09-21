@@ -85,7 +85,7 @@ PageType {
                 Layout.leftMargin: 16
                 Layout.rightMargin: 16
 
-                textString: qsTr("Резервная копия будет содержать ваши пароли и закрытые ключи для всех серверов, добавленных в VPNYour. Храните эту информацию в надёжном месте.")
+                textString: qsTr("Резервная копия будет содержать ваши пароли и закрытые ключи для всех серверов, добавленных в Скрытую сеть. Храните эту информацию в надёжном месте.")
 
                 iconPath: "qrc:/images/controls/alert-circle.svg"
             }
@@ -103,11 +103,11 @@ PageType {
                 clickedFunc: function() {
                     var fileName = ""
                     if (GC.isMobile()) {
-                        fileName = "VPNYour.backup"
+                        fileName = "Скрытая сеть.backup"
                     } else {
                         fileName = SystemController.getFileName(qsTr("Save backup file"),
                                                                 qsTr("Backup files (*.backup)"),
-                                                                StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/VPNYour",
+                                                                StandardPaths.standardLocations(StandardPaths.DocumentsLocation) + "/Скрытая сеть",
                                                                 true,
                                                                 ".backup")
                     }

@@ -75,7 +75,7 @@ PageType {
                 Layout.rightMargin: 16
                 Layout.bottomMargin: 16
 
-                headerText: qsTr("VPN protocol")
+                headerText: qsTr("Протокол подключения")
                 descriptionText: qsTr("Choose the one with the highest priority for you. Later, you can install other protocols and additional services, such as DNS proxy and SFTP.")
             }
         }

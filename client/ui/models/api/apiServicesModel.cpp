@@ -74,7 +74,7 @@ QVariant ApiServicesModel::data(const QModelIndex &index, int role) const
         } else if (serviceType == serviceType::amneziaFree) {
             QString description = apiServiceData.serviceInfo.cardDescription;
             if (!isServiceAvailable) {
-                description += tr("<p><a style=\"color: #EB5757;\">Not available in your region. If you have VPN enabled, disable it, "
+                description += tr("<p><a style=\"color: #EB5757;\">Недоступно в вашем регионе. Если защищённое соединение включено, отключите его, "
                                   "return to the previous screen, and try again.</a>");
             }
             return description;

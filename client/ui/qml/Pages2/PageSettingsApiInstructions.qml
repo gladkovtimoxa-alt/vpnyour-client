@@ -99,7 +99,7 @@ PageType {
                 Layout.leftMargin: 16
 
                 headerText: qsTr("How to connect on another device")
-                descriptionText: qsTr("Setup guides on the VPNYour website")
+                descriptionText: qsTr("Инструкции по настройке на сайте Скрытой сети")
             }
         }
 

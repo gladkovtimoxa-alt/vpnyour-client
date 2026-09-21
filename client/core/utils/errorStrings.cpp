@@ -54,18 +54,18 @@ QString errorString(ErrorCode code) {
     case(ErrorCode::SshScpFailureError): errorMessage = QObject::tr("SCP error: Generic failure"); break;
 
     // Local errors
-    case (ErrorCode::OpenVpnConfigMissing): errorMessage = QObject::tr("OpenVPN config missing"); break;
-    case (ErrorCode::OpenVpnManagementServerError): errorMessage = QObject::tr("OpenVPN management server error"); break;
+    case (ErrorCode::OpenVpnConfigMissing): errorMessage = QObject::tr("Файл конфигурации открытого протокола отсутствует"); break;
+    case (ErrorCode::OpenVpnManagementServerError): errorMessage = QObject::tr("Ошибка сервера управления открытым протоколом"); break;
 
     // Distro errors
-    case (ErrorCode::OpenVpnExecutableMissing): errorMessage = QObject::tr("OpenVPN executable missing"); break;
-    case (ErrorCode::AmneziaServiceConnectionFailed): errorMessage = QObject::tr("VPNYour helper service error"); break;
+    case (ErrorCode::OpenVpnExecutableMissing): errorMessage = QObject::tr("Исполняемый файл открытого протокола отсутствует"); break;
+    case (ErrorCode::AmneziaServiceConnectionFailed): errorMessage = QObject::tr("Ошибка вспомогательной службы Скрытой сети"); break;
     case (ErrorCode::OpenSslFailed): errorMessage = QObject::tr("OpenSSL failed"); break;
 
     // VPN errors
-    case (ErrorCode::OpenVpnAdaptersInUseError): errorMessage = QObject::tr("Can't connect: another VPN connection is active"); break;
-    case (ErrorCode::OpenVpnTapAdapterError): errorMessage = QObject::tr("Can't setup OpenVPN TAP network adapter"); break;
-    case (ErrorCode::AddressPoolError): errorMessage = QObject::tr("VPN pool error: no available addresses"); break;
+    case (ErrorCode::OpenVpnAdaptersInUseError): errorMessage = QObject::tr("Не удалось подключиться: активно другое защищённое соединение"); break;
+    case (ErrorCode::OpenVpnTapAdapterError): errorMessage = QObject::tr("Не удалось настроить сетевой адаптер TAP"); break;
+    case (ErrorCode::AddressPoolError): errorMessage = QObject::tr("Ошибка пула адресов: нет доступных адресов"); break;
 
     case (ErrorCode::ImportInvalidConfigError): errorMessage = QObject::tr("The config does not contain any containers and credentials for connecting to the server"); break;
     case (ErrorCode::ImportBackupFileUseRestoreInstead): errorMessage = QObject::tr("Backup files cannot be imported here. Use 'Restore from backup' instead."); break;
@@ -73,10 +73,10 @@ QString errorString(ErrorCode code) {
     case (ErrorCode::LegacyApiV1NotSupportedError): errorMessage = QObject::tr("This legacy subscription format is no longer supported"); break;
     case (ErrorCode::LegacyContainerNotSupportedError): errorMessage = QObject::tr("This protocol is no longer supported. Please select another protocol or remove this container from the server settings."); break;
     case (ErrorCode::ImportOpenConfigError): errorMessage = QObject::tr("Unable to open config file"); break;
-    case (ErrorCode::NoInstalledContainersError): errorMessage = QObject::tr("VPN Protocols is not installed.\n Please install VPN container at first"); break;
+    case (ErrorCode::NoInstalledContainersError): errorMessage = QObject::tr("Протоколы подключения не установлены.\n Сначала установите контейнер протокола"); break;
 
     // Android errors
-    case (ErrorCode::AndroidError): errorMessage = QObject::tr("VPN connection error"); break;
+    case (ErrorCode::AndroidError): errorMessage = QObject::tr("Ошибка защищённого соединения"); break;
 
     // Api errors
     case (ErrorCode::ApiConfigDownloadError): errorMessage = QObject::tr("Error when retrieving configuration from API"); break;
@@ -91,7 +91,7 @@ QString errorString(ErrorCode code) {
     case (ErrorCode::ApiNotFoundError): errorMessage = QObject::tr("Error when retrieving configuration from API"); break;
     case (ErrorCode::ApiMigrationError): errorMessage = QObject::tr("A migration error has occurred. Please contact our technical support"); break;
     case (ErrorCode::ApiUpdateRequestError): errorMessage = QObject::tr("Please update the application to use this feature"); break;
-    case (ErrorCode::ApiSubscriptionExpiredError): errorMessage = QObject::tr("Your VPNYour Premium subscription has expired.\n Please check your email for renewal instructions.\n If you haven't received an email, please contact our support."); break;
+    case (ErrorCode::ApiSubscriptionExpiredError): errorMessage = QObject::tr("Срок действия подписки Скрытой сети истёк.\n Проверьте почту: туда отправлены инструкции по продлению.\n Если письма нет, обратитесь в поддержку."); break;
     case (ErrorCode::ApiPurchaseError): errorMessage = QObject::tr("Unable to process purchase"); break;
     case (ErrorCode::ApiSubscriptionNotActiveError): errorMessage = QObject::tr("No active subscription found"); break;
     case (ErrorCode::ApiNoPurchasedSubscriptionsError): errorMessage = QObject::tr("No purchased subscriptions found. Please purchase a subscription first"); break;
