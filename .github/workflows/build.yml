@@ -20,7 +20,13 @@ jobs:
     env:
       ANDROID_PLATFORM: android-28
       NDK_VERSION: 27.0.11718014
-      QT_VERSION: 6.10.3
+      # 6.10.3 больше не раздаётся для target=android (проверено 21.09.2026:
+      # aqt list-qt linux android показывает максимум 6.7.3, в
+      # download.qt.io/online/qtsdkrepository/linux_x64/android/ — максимум 6.6.3).
+      # Из-за этого сборка падала на шаге установки Qt, ещё до компиляции.
+      # 6.7.3 — последняя доступная для Android; проект требует просто Qt6
+      # (find_package(Qt6 REQUIRED) без минорной версии).
+      QT_VERSION: 6.7.3
       QT_MODULES: 'qtremoteobjects qt5compat qtimageformats qtshadertools'
       ABI: arm64-v8a
     steps:
